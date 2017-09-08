@@ -192,10 +192,11 @@ var styles = {
         color: '#666666',
         cursor: 'pointer',
         display: 'block',
-        padding: '8px 10px'
+        padding: '10px 10px',
+        outline: 0
     },
     itemContainerHover: {
-        backgroundColor: '#ebf5ff',
+        backgroundColor: 'rgba(0,0,0,0.06)',
         outline: 0
     },
     label: {

@@ -271,10 +271,11 @@ var styles = {
         color: '#666666',
         cursor: 'pointer',
         display: 'block',
-        padding: '8px 10px'
+        padding: '10px 10px',
+        outline: 0
     },
     itemContainerHover: {
-        backgroundColor: '#ebf5ff',
+        backgroundColor: 'rgba(0,0,0,0.06)',
         outline: 0
     },
     label: {
@@ -342,7 +343,8 @@ var Dropdown = function (_Component) {
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
             expanded: false,
-            hasFocus: false
+            hasFocus: false,
+            hovered: false
         }, _this.handleDocumentClick = function (event) {
             if (_this.wrapper && !_this.wrapper.contains(event.target)) {
                 _this.setState({ expanded: false });
@@ -432,7 +434,8 @@ var Dropdown = function (_Component) {
 
             var _state = this.state,
                 expanded = _state.expanded,
-                hasFocus = _state.hasFocus;
+                hasFocus = _state.hasFocus,
+                hovered = _state.hovered;
             var _props2 = this.props,
                 children = _props2.children,
                 isLoading = _props2.isLoading;
@@ -441,6 +444,8 @@ var Dropdown = function (_Component) {
             var expandedHeaderStyle = expanded ? styles.dropdownHeaderExpanded : undefined;
 
             var focusedHeaderStyle = hasFocus ? styles.dropdownHeaderFocused : undefined;
+
+            var hoverHeaderStyle = hovered && !hasFocus && !expanded ? styles.dropdownHeaderHover : undefined;
 
             var arrowStyle = expanded ? styles.dropdownArrowUp : styles.dropdownArrowDown;
 
@@ -459,11 +464,18 @@ var Dropdown = function (_Component) {
                     },
                     onKeyDown: this.handleKeyDown,
                     onFocus: this.handleFocus,
-                    onBlur: this.handleBlur },
+                    onBlur: this.handleBlur,
+                    onMouseOver: function onMouseOver() {
+                        return _this2.setState({ hovered: true });
+                    },
+                    onMouseOut: function onMouseOut() {
+                        return _this2.setState({ hovered: false });
+                    }
+                },
                 _react2.default.createElement(
                     'div',
                     {
-                        style: _extends({}, styles.dropdownHeader, expandedHeaderStyle, focusedHeaderStyle),
+                        style: _extends({}, styles.dropdownHeader, expandedHeaderStyle, hoverHeaderStyle, focusedHeaderStyle),
                         onClick: function onClick() {
                             return _this2.toggleExpanded();
                         }
@@ -493,7 +505,7 @@ var Dropdown = function (_Component) {
     return Dropdown;
 }(_react.Component);
 
-var focusColor = '#96C8DA';
+var focusColor = '';
 
 var styles = {
     dropdownArrow: {
@@ -555,11 +567,11 @@ var styles = {
     dropdownHeader: {
         boxSizing: 'border-box',
         backgroundColor: '#fff',
-        borderColor: '#d9d9d9 #ccc #b3b3b3',
+        borderColor: 'rgba(34, 36, 38, 0.15)',
         borderRadius: 4,
         borderBottomRightRadius: 4,
         borderBottomLeftRadius: 4,
-        border: '1px solid #ccc',
+        border: '1px solid rgba(34, 36, 38, 0.15)',
         color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
         display: 'table',
@@ -572,8 +584,11 @@ var styles = {
         width: '100%'
     },
     dropdownHeaderFocused: {
-        borderColor: focusColor,
+        borderColor: '#96C8DA!important',
         boxShadow: 'none'
+    },
+    dropdownHeaderHover: {
+        borderColor: 'rgba(34, 36, 38, 0.35)'
     },
     dropdownHeaderExpanded: {
         borderColor: '#96C8DA #96C8DA #96C8DA',

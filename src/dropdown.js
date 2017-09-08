@@ -13,6 +13,7 @@ class Dropdown extends Component {
     state = {
         expanded: false,
         hasFocus: false,
+        hovered: false,
     }
 
     componentWillUpdate() {
@@ -100,7 +101,7 @@ class Dropdown extends Component {
     }
 
     render() {
-        const { expanded, hasFocus } = this.state;
+        const { expanded, hasFocus, hovered } = this.state;
         const { children, isLoading } = this.props;
 
         const expandedHeaderStyle = expanded
@@ -110,6 +111,10 @@ class Dropdown extends Component {
         const focusedHeaderStyle = hasFocus
             ? styles.dropdownHeaderFocused
             : undefined;
+
+        const hoverHeaderStyle = hovered && !hasFocus && !expanded
+            ? styles.dropdownHeaderHover
+            : undefined;    
 
         const arrowStyle = expanded
             ? styles.dropdownArrowUp
@@ -128,11 +133,15 @@ class Dropdown extends Component {
             ref={ref => this.wrapper = ref}
             onKeyDown={this.handleKeyDown}
             onFocus={this.handleFocus}
-            onBlur={this.handleBlur}>
+            onBlur={this.handleBlur}
+            onMouseOver={() => this.setState({hovered: true})}
+            onMouseOut={() => this.setState({hovered: false})}
+            >
             <div
                 style={{
                     ...styles.dropdownHeader,
                     ...expandedHeaderStyle,
+                    ...hoverHeaderStyle,
                     ...focusedHeaderStyle,
                 }}
                 onClick={() => this.toggleExpanded()}
@@ -156,7 +165,7 @@ class Dropdown extends Component {
     }
 }
 
-const focusColor = '#96C8DA';
+const focusColor = '';
 
 const styles = {
     dropdownArrow: {
@@ -218,11 +227,11 @@ const styles = {
     dropdownHeader: {
         boxSizing: 'border-box',
         backgroundColor: '#fff',
-        borderColor: '#d9d9d9 #ccc #b3b3b3',
+        borderColor: 'rgba(34, 36, 38, 0.15)',
         borderRadius: 4,
         borderBottomRightRadius: 4,
         borderBottomLeftRadius: 4,
-        border: '1px solid #ccc',
+        border: '1px solid rgba(34, 36, 38, 0.15)',
         color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
         display: 'table',
@@ -235,8 +244,11 @@ const styles = {
         width: '100%',
     },
     dropdownHeaderFocused: {
-        borderColor: focusColor,
+        borderColor: '#96C8DA!important',
         boxShadow: 'none',
+    },
+    dropdownHeaderHover:{
+        borderColor: 'rgba(34, 36, 38, 0.35)'
     },
     dropdownHeaderExpanded: {
         borderColor: '#96C8DA #96C8DA #96C8DA',
