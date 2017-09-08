@@ -116,6 +116,7 @@ class StatefulMultiSelect extends Component {
         ItemRenderer?: Function,
         selectAllLabel?: string,
         isLoading?: boolean,
+        enableSearch?:boolean
     }
 
     handleSelectedChanged(selected) {
@@ -129,6 +130,7 @@ class StatefulMultiSelect extends Component {
             selectAllLabel,
             valueRenderer,
             isLoading,
+            enableSearch,
         } = this.props;
         const {selected} = this.state;
 
@@ -141,6 +143,7 @@ class StatefulMultiSelect extends Component {
                 ItemRenderer={ItemRenderer}
                 selectAllLabel={selectAllLabel}
                 isLoading={isLoading}
+                enableSearch = {enableSearch}
             />
 
         <h2>Selected:</h2>
@@ -189,6 +192,7 @@ class StudentItemRenderer extends Component {
 
 storiesOf('MultiSelect', module)
     .add('default view', () => <StatefulMultiSelect options={shortList} />)
+    .add('default view with Search input', () => <StatefulMultiSelect options={shortList} enableSearch={true} />)
     .add('long list view', () => <StatefulMultiSelect options={longList} />)
     .add('United States', () => <StatefulMultiSelect options={statesList} />)
     .add('Custom Heading Renderer', () => <StatefulMultiSelect

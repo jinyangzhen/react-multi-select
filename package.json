@@ -1,10 +1,10 @@
 {
-  "name": "@khanacademy/react-multi-select",
-  "version": "0.2.0",
-  "description": "React Multi Select Component",
+  "name": "simple-multi-select",
+  "version": "0.2.2",
+  "description": "A simple port from React Multi Select Component https://github.com/khan/react-multi-select",
   "repository": {
     "type": "git",
-    "url": "https://github.com/khan/react-multi-select"
+    "url": "https://github.com/jinyangzhen/react-multi-select"
   },
   "license": "MIT",
   "scripts": {

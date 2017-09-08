@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -308,7 +308,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _loadingIndicator = __webpack_require__(4);
+var _loadingIndicator = __webpack_require__(5);
 
 var _loadingIndicator2 = _interopRequireDefault(_loadingIndicator);
 
@@ -459,8 +459,7 @@ var Dropdown = function (_Component) {
                     },
                     onKeyDown: this.handleKeyDown,
                     onFocus: this.handleFocus,
-                    onBlur: this.handleBlur
-                },
+                    onBlur: this.handleBlur },
                 _react2.default.createElement(
                     'div',
                     {
@@ -494,7 +493,7 @@ var Dropdown = function (_Component) {
     return Dropdown;
 }(_react.Component);
 
-var focusColor = '#78c008';
+var focusColor = '#96C8DA';
 
 var styles = {
     dropdownArrow: {
@@ -550,7 +549,8 @@ var styles = {
     dropdownContainer: {
         position: 'relative',
         boxSizing: 'border-box',
-        outline: 'none'
+        outline: 'none',
+        width: '100%'
     },
     dropdownHeader: {
         boxSizing: 'border-box',
@@ -560,12 +560,12 @@ var styles = {
         borderBottomRightRadius: 4,
         borderBottomLeftRadius: 4,
         border: '1px solid #ccc',
-        color: '#333',
+        color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
         display: 'table',
         borderSpacing: 0,
         borderCollapse: 'separate',
-        height: 36,
+        height: 38,
         outline: 'none',
         overflow: 'hidden',
         position: 'relative',
@@ -576,6 +576,7 @@ var styles = {
         boxShadow: 'none'
     },
     dropdownHeaderExpanded: {
+        borderColor: '#96C8DA #96C8DA #96C8DA',
         borderBottomRightRadius: '0px',
         borderBottomLeftRadius: '0px'
     },
@@ -589,7 +590,7 @@ var styles = {
         borderBottomRightRadius: '4px',
         borderBottomLeftRadius: '4px',
         backgroundColor: '#fff',
-        border: '1px solid #ccc',
+        border: '1px solid #96C8DA',
         borderTopColor: '#e6e6e6',
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.06)',
         boxSizing: 'border-box',
@@ -620,7 +621,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fuzzyMatchUtils = __webpack_require__(6);
+var _fuzzyMatchUtils = __webpack_require__(7);
 
 var _react = __webpack_require__(0);
 
@@ -630,7 +631,7 @@ var _selectItem = __webpack_require__(1);
 
 var _selectItem2 = _interopRequireDefault(_selectItem);
 
-var _selectList = __webpack_require__(5);
+var _selectList = __webpack_require__(6);
 
 var _selectList2 = _interopRequireDefault(_selectList);
 
@@ -769,7 +770,8 @@ var SelectPanel = function (_Component) {
                 searchHasFocus = _state.searchHasFocus;
             var _props2 = this.props,
                 ItemRenderer = _props2.ItemRenderer,
-                selectAllLabel = _props2.selectAllLabel;
+                selectAllLabel = _props2.selectAllLabel,
+                enableSearch = _props2.enableSearch;
 
 
             var selectAllOption = {
@@ -786,7 +788,7 @@ var SelectPanel = function (_Component) {
                     role: 'listbox',
                     onKeyDown: this.handleKeyDown
                 },
-                _react2.default.createElement(
+                enableSearch ? _react2.default.createElement(
                     'div',
                     { style: styles.searchContainer },
                     _react2.default.createElement('input', {
@@ -801,7 +803,7 @@ var SelectPanel = function (_Component) {
                             return _this2.handleSearchFocus(false);
                         }
                     })
-                ),
+                ) : '',
                 _react2.default.createElement(_selectItem2.default, {
                     focused: focusIndex === 0,
                     checked: this.allAreSelected(),
@@ -847,7 +849,7 @@ var styles = {
         outline: "none"
     },
     searchFocused: {
-        borderColor: "#78c008"
+        borderColor: "#96C8DA"
     },
     searchContainer: {
         width: "100%",
@@ -860,6 +862,163 @@ exports.default = SelectPanel;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Dropdown = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _dropdown = __webpack_require__(2);
+
+var _dropdown2 = _interopRequireDefault(_dropdown);
+
+var _selectPanel = __webpack_require__(3);
+
+var _selectPanel2 = _interopRequireDefault(_selectPanel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+/**
+ * This component is designed to be a multi-selct component which supports
+ * the selection of several items in a picklist.  It was meant to mimic the
+ * style of react-select but the multi-select behavior didn't work for our
+ * our needs.
+ *
+ * Arguments:
+ * - options: The {value, label}[] options to be displayed
+ * - values: The currently selected values []
+ * - onSelectedChanged: An event to notify the caller of new values
+ * - valueRenderer: A fn to support overriding the message in the component
+ * - isLoading: Show a loading indicator
+ */
+
+
+var MultiSelect = function (_Component) {
+    _inherits(MultiSelect, _Component);
+
+    function MultiSelect() {
+        _classCallCheck(this, MultiSelect);
+
+        return _possibleConstructorReturn(this, (MultiSelect.__proto__ || Object.getPrototypeOf(MultiSelect)).apply(this, arguments));
+    }
+
+    _createClass(MultiSelect, [{
+        key: 'getSelectedText',
+        value: function getSelectedText() {
+            var _props = this.props,
+                options = _props.options,
+                selected = _props.selected;
+
+
+            var selectedOptions = selected.map(function (s) {
+                return options.find(function (o) {
+                    return o.value === s;
+                });
+            });
+
+            var selectedLabels = selectedOptions.map(function (s) {
+                return s ? s.label : "";
+            });
+
+            return selectedLabels.join(", ");
+        }
+    }, {
+        key: 'renderHeader',
+        value: function renderHeader() {
+            var _props2 = this.props,
+                options = _props2.options,
+                selected = _props2.selected,
+                valueRenderer = _props2.valueRenderer;
+
+
+            var noneSelected = selected.length === 0;
+            var allSelected = selected.length === options.length;
+
+            var customText = valueRenderer && valueRenderer(selected, options);
+
+            if (noneSelected) {
+                return _react2.default.createElement(
+                    'span',
+                    { style: styles.noneSelected },
+                    customText || "Select some items..."
+                );
+            }
+
+            if (customText) {
+                return _react2.default.createElement(
+                    'span',
+                    null,
+                    customText
+                );
+            }
+
+            return _react2.default.createElement(
+                'span',
+                null,
+                allSelected ? "All items are selected" : this.getSelectedText()
+            );
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props3 = this.props,
+                ItemRenderer = _props3.ItemRenderer,
+                options = _props3.options,
+                selected = _props3.selected,
+                selectAllLabel = _props3.selectAllLabel,
+                onSelectedChanged = _props3.onSelectedChanged,
+                isLoading = _props3.isLoading,
+                enableSearch = _props3.enableSearch;
+
+
+            return _react2.default.createElement(
+                _dropdown2.default,
+                {
+                    isLoading: isLoading,
+                    contentComponent: _selectPanel2.default,
+                    contentProps: {
+                        ItemRenderer: ItemRenderer,
+                        options: options,
+                        selected: selected,
+                        selectAllLabel: selectAllLabel,
+                        onSelectedChanged: onSelectedChanged,
+                        enableSearch: enableSearch
+                    }
+                },
+                this.renderHeader()
+            );
+        }
+    }]);
+
+    return MultiSelect;
+}(_react.Component);
+
+var styles = {
+    noneSelected: {
+        color: "#aaa"
+    }
+};
+
+exports.default = MultiSelect;
+exports.Dropdown = _dropdown2.default;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -968,7 +1127,7 @@ var styles = {
 exports.default = LoadingIndicator;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1101,165 +1260,10 @@ var styles = {
 exports.default = SelectList;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("fuzzy-match-utils");
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Dropdown = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _dropdown = __webpack_require__(2);
-
-var _dropdown2 = _interopRequireDefault(_dropdown);
-
-var _selectPanel = __webpack_require__(3);
-
-var _selectPanel2 = _interopRequireDefault(_selectPanel);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-/**
- * This component is designed to be a multi-selct component which supports
- * the selection of several items in a picklist.  It was meant to mimic the
- * style of react-select but the multi-select behavior didn't work for our
- * our needs.
- *
- * Arguments:
- * - options: The {value, label}[] options to be displayed
- * - values: The currently selected values []
- * - onSelectedChanged: An event to notify the caller of new values
- * - valueRenderer: A fn to support overriding the message in the component
- * - isLoading: Show a loading indicator
- */
-
-
-var MultiSelect = function (_Component) {
-    _inherits(MultiSelect, _Component);
-
-    function MultiSelect() {
-        _classCallCheck(this, MultiSelect);
-
-        return _possibleConstructorReturn(this, (MultiSelect.__proto__ || Object.getPrototypeOf(MultiSelect)).apply(this, arguments));
-    }
-
-    _createClass(MultiSelect, [{
-        key: 'getSelectedText',
-        value: function getSelectedText() {
-            var _props = this.props,
-                options = _props.options,
-                selected = _props.selected;
-
-
-            var selectedOptions = selected.map(function (s) {
-                return options.find(function (o) {
-                    return o.value === s;
-                });
-            });
-
-            var selectedLabels = selectedOptions.map(function (s) {
-                return s ? s.label : "";
-            });
-
-            return selectedLabels.join(", ");
-        }
-    }, {
-        key: 'renderHeader',
-        value: function renderHeader() {
-            var _props2 = this.props,
-                options = _props2.options,
-                selected = _props2.selected,
-                valueRenderer = _props2.valueRenderer;
-
-
-            var noneSelected = selected.length === 0;
-            var allSelected = selected.length === options.length;
-
-            var customText = valueRenderer && valueRenderer(selected, options);
-
-            if (noneSelected) {
-                return _react2.default.createElement(
-                    'span',
-                    { style: styles.noneSelected },
-                    customText || "Select some items..."
-                );
-            }
-
-            if (customText) {
-                return _react2.default.createElement(
-                    'span',
-                    null,
-                    customText
-                );
-            }
-
-            return _react2.default.createElement(
-                'span',
-                null,
-                allSelected ? "All items are selected" : this.getSelectedText()
-            );
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props3 = this.props,
-                ItemRenderer = _props3.ItemRenderer,
-                options = _props3.options,
-                selected = _props3.selected,
-                selectAllLabel = _props3.selectAllLabel,
-                onSelectedChanged = _props3.onSelectedChanged,
-                isLoading = _props3.isLoading;
-
-
-            return _react2.default.createElement(
-                _dropdown2.default,
-                {
-                    isLoading: isLoading,
-                    contentComponent: _selectPanel2.default,
-                    contentProps: {
-                        ItemRenderer: ItemRenderer,
-                        options: options,
-                        selected: selected,
-                        selectAllLabel: selectAllLabel,
-                        onSelectedChanged: onSelectedChanged
-                    }
-                },
-                this.renderHeader()
-            );
-        }
-    }]);
-
-    return MultiSelect;
-}(_react.Component);
-
-var styles = {
-    noneSelected: {
-        color: "#aaa"
-    }
-};
-
-exports.default = MultiSelect;
-exports.Dropdown = _dropdown2.default;
 
 /***/ })
 /******/ ])));

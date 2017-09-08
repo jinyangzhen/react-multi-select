@@ -4,7 +4,7 @@
  * and hosts it in the component.  When the component is selected, it
  * drops-down the contentComponent and applies the contentProps.
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import LoadingIndicator from './loading-indicator.js';
 
@@ -36,7 +36,7 @@ class Dropdown extends Component {
 
     handleDocumentClick = (event: Event) => {
         if (this.wrapper && !this.wrapper.contains(event.target)) {
-            this.setState({expanded: false});
+            this.setState({ expanded: false });
         }
     }
 
@@ -58,25 +58,25 @@ class Dropdown extends Component {
         e.preventDefault();
     }
 
-    handleFocus = (e: {target: any}) => {
-        const {hasFocus} = this.state;
+    handleFocus = (e: { target: any }) => {
+        const { hasFocus } = this.state;
 
         if (e.target === this.wrapper && !hasFocus) {
-            this.setState({hasFocus: true});
+            this.setState({ hasFocus: true });
         }
     }
 
-    handleBlur = (e: {target: any}) => {
-        const {hasFocus} = this.state;
+    handleBlur = (e: { target: any }) => {
+        const { hasFocus } = this.state;
 
         if (hasFocus) {
-            this.setState({hasFocus: false});
+            this.setState({ hasFocus: false });
         }
     }
 
     toggleExpanded = (value: ?boolean) => {
-        const {isLoading} = this.props;
-        const {expanded} = this.state;
+        const { isLoading } = this.props;
+        const { expanded } = this.state;
 
         if (isLoading) {
             return;
@@ -84,7 +84,7 @@ class Dropdown extends Component {
 
         const newExpanded = value === undefined ? !expanded : !!value;
 
-        this.setState({expanded: newExpanded});
+        this.setState({ expanded: newExpanded });
 
         if (!newExpanded && this.wrapper) {
             this.wrapper.focus();
@@ -92,7 +92,7 @@ class Dropdown extends Component {
     }
 
     renderPanel() {
-        const {contentComponent: ContentComponent, contentProps} = this.props;
+        const { contentComponent: ContentComponent, contentProps } = this.props;
 
         return <div style={styles.panelContainer}>
             <ContentComponent {...contentProps} />
@@ -100,8 +100,8 @@ class Dropdown extends Component {
     }
 
     render() {
-        const {expanded, hasFocus} = this.state;
-        const {children, isLoading} = this.props;
+        const { expanded, hasFocus } = this.state;
+        const { children, isLoading } = this.props;
 
         const expandedHeaderStyle = expanded
             ? styles.dropdownHeaderExpanded
@@ -128,8 +128,7 @@ class Dropdown extends Component {
             ref={ref => this.wrapper = ref}
             onKeyDown={this.handleKeyDown}
             onFocus={this.handleFocus}
-            onBlur={this.handleBlur}
-        >
+            onBlur={this.handleBlur}>
             <div
                 style={{
                     ...styles.dropdownHeader,
@@ -157,7 +156,7 @@ class Dropdown extends Component {
     }
 }
 
-const focusColor = '#78c008';
+const focusColor = '#96C8DA';
 
 const styles = {
     dropdownArrow: {
@@ -214,6 +213,7 @@ const styles = {
         position: 'relative',
         boxSizing: 'border-box',
         outline: 'none',
+        width: '100%',
     },
     dropdownHeader: {
         boxSizing: 'border-box',
@@ -223,12 +223,12 @@ const styles = {
         borderBottomRightRadius: 4,
         borderBottomLeftRadius: 4,
         border: '1px solid #ccc',
-        color: '#333',
+        color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
         display: 'table',
         borderSpacing: 0,
         borderCollapse: 'separate',
-        height: 36,
+        height: 38,
         outline: 'none',
         overflow: 'hidden',
         position: 'relative',
@@ -239,6 +239,7 @@ const styles = {
         boxShadow: 'none',
     },
     dropdownHeaderExpanded: {
+        borderColor: '#96C8DA #96C8DA #96C8DA',
         borderBottomRightRadius: '0px',
         borderBottomLeftRadius: '0px',
     },
@@ -252,7 +253,7 @@ const styles = {
         borderBottomRightRadius: '4px',
         borderBottomLeftRadius: '4px',
         backgroundColor: '#fff',
-        border: '1px solid #ccc',
+        border: '1px solid #96C8DA',
         borderTopColor: '#e6e6e6',
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.06)',
         boxSizing: 'border-box',

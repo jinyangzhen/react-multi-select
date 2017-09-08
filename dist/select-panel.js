@@ -157,7 +157,8 @@ var SelectPanel = function (_Component) {
                 searchHasFocus = _state.searchHasFocus;
             var _props2 = this.props,
                 ItemRenderer = _props2.ItemRenderer,
-                selectAllLabel = _props2.selectAllLabel;
+                selectAllLabel = _props2.selectAllLabel,
+                enableSearch = _props2.enableSearch;
 
 
             var selectAllOption = {
@@ -174,7 +175,7 @@ var SelectPanel = function (_Component) {
                     role: 'listbox',
                     onKeyDown: this.handleKeyDown
                 },
-                _react2.default.createElement(
+                enableSearch ? _react2.default.createElement(
                     'div',
                     { style: styles.searchContainer },
                     _react2.default.createElement('input', {
@@ -189,7 +190,7 @@ var SelectPanel = function (_Component) {
                             return _this2.handleSearchFocus(false);
                         }
                     })
-                ),
+                ) : '',
                 _react2.default.createElement(_selectItem2.default, {
                     focused: focusIndex === 0,
                     checked: this.allAreSelected(),
@@ -235,7 +236,7 @@ var styles = {
         outline: "none"
     },
     searchFocused: {
-        borderColor: "#78c008"
+        borderColor: "#96C8DA"
     },
     searchContainer: {
         width: "100%",

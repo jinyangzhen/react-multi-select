@@ -163,8 +163,7 @@ var Dropdown = function (_Component) {
                     },
                     onKeyDown: this.handleKeyDown,
                     onFocus: this.handleFocus,
-                    onBlur: this.handleBlur
-                },
+                    onBlur: this.handleBlur },
                 _react2.default.createElement(
                     'div',
                     {
@@ -198,7 +197,7 @@ var Dropdown = function (_Component) {
     return Dropdown;
 }(_react.Component);
 
-var focusColor = '#78c008';
+var focusColor = '#96C8DA';
 
 var styles = {
     dropdownArrow: {
@@ -254,7 +253,8 @@ var styles = {
     dropdownContainer: {
         position: 'relative',
         boxSizing: 'border-box',
-        outline: 'none'
+        outline: 'none',
+        width: '100%'
     },
     dropdownHeader: {
         boxSizing: 'border-box',
@@ -264,12 +264,12 @@ var styles = {
         borderBottomRightRadius: 4,
         borderBottomLeftRadius: 4,
         border: '1px solid #ccc',
-        color: '#333',
+        color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
         display: 'table',
         borderSpacing: 0,
         borderCollapse: 'separate',
-        height: 36,
+        height: 38,
         outline: 'none',
         overflow: 'hidden',
         position: 'relative',
@@ -280,6 +280,7 @@ var styles = {
         boxShadow: 'none'
     },
     dropdownHeaderExpanded: {
+        borderColor: '#96C8DA #96C8DA #96C8DA',
         borderBottomRightRadius: '0px',
         borderBottomLeftRadius: '0px'
     },
@@ -293,7 +294,7 @@ var styles = {
         borderBottomRightRadius: '4px',
         borderBottomLeftRadius: '4px',
         backgroundColor: '#fff',
-        border: '1px solid #ccc',
+        border: '1px solid #96C8DA',
         borderTopColor: '#e6e6e6',
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.06)',
         boxSizing: 'border-box',

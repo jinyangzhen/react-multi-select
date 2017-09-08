@@ -26,6 +26,7 @@ class SelectPanel extends Component {
         options: Array<Option>,
         selected: Array<any>,
         selectAllLabel?: string,
+        enableSearch?: boolean,
         onSelectedChanged: (selected: Array<any>) => void,
     }
 
@@ -121,7 +122,7 @@ class SelectPanel extends Component {
 
     render() {
         const {focusIndex, searchHasFocus} = this.state;
-        const {ItemRenderer, selectAllLabel} = this.props;
+        const {ItemRenderer, selectAllLabel, enableSearch} = this.props;
 
         const selectAllOption = {
             label: selectAllLabel || "Select All",
@@ -137,16 +138,18 @@ class SelectPanel extends Component {
             role="listbox"
             onKeyDown={this.handleKeyDown}
         >
-            <div style={styles.searchContainer}>
-                <input
-                    placeholder="Search"
-                    type="text"
-                    onChange={this.handleSearchChange}
-                    style={{...styles.search, ...focusedSearchStyle}}
-                    onFocus={() => this.handleSearchFocus(true)}
-                    onBlur={() => this.handleSearchFocus(false)}
-                />
-            </div>
+           {
+                enableSearch ? <div style={styles.searchContainer}>
+                    <input
+                        placeholder="Search"
+                        type="text"
+                        onChange={this.handleSearchChange}
+                        style={{...styles.search, ...focusedSearchStyle}}
+                        onFocus={() => this.handleSearchFocus(true)}
+                        onBlur={() => this.handleSearchFocus(false)}
+                    />
+                </div> : ''
+           } 
 
             <SelectItem
                 focused={focusIndex === 0}
@@ -188,7 +191,7 @@ const styles = {
         outline: "none",
     },
     searchFocused: {
-        borderColor: "#78c008",
+        borderColor: "#96C8DA",
     },
     searchContainer: {
         width: "100%",
