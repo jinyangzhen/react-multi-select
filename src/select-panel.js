@@ -125,7 +125,7 @@ class SelectPanel extends Component {
         const {ItemRenderer, selectAllLabel, enableSearch} = this.props;
 
         const selectAllOption = {
-            label: selectAllLabel || "Select All",
+            label: selectAllLabel,
             value: "",
         };
 
@@ -150,15 +150,16 @@ class SelectPanel extends Component {
                     />
                 </div> : ''
            } 
-
-            <SelectItem
-                focused={focusIndex === 0}
-                checked={this.allAreSelected()}
-                option={selectAllOption}
-                onSelectionChanged={this.selectAllChanged}
-                onClick={() => this.handleItemClicked(0)}
-                ItemRenderer={ItemRenderer}
-            />
+           {  
+               selectAllLabel
+               ? <SelectItem
+                    focused={focusIndex === 0}
+                    checked={this.allAreSelected()}
+                    option={selectAllOption}
+                    onSelectionChanged={this.selectAllChanged}
+                    onClick={() => this.handleItemClicked(0)}
+                    ItemRenderer={ItemRenderer} /> : ''
+            }
 
             <SelectList
                 {...this.props}

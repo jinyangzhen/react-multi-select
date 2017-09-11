@@ -2,7 +2,8 @@
 /**
  * This component represents an individual item in the multi-select drop-down
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import _ from 'lodash';
 
 export type Option = {
     value: any,
@@ -13,12 +14,12 @@ class DefaultItemRenderer extends Component {
     props: {
         checked: boolean,
         option: Option,
-
         onClick: (event: MouseEvent) => void,
+        disable: boolean,
     }
 
     render() {
-        const {checked, option, onClick} = this.props;
+        const { checked, option, onClick, disable } = this.props;
 
         return <span>
             <input
@@ -26,8 +27,9 @@ class DefaultItemRenderer extends Component {
                 onChange={onClick}
                 checked={checked}
                 tabIndex="-1"
+                disabled={disable}
             />
-            <span style={styles.label}>
+            <span style={{...styles.label, ...(disable?styles.disable:styles.enable)}}> 
                 {option.label}
             </span>
         </span>;
@@ -60,22 +62,25 @@ class SelectItem extends Component {
         focused?: boolean,
         onSelectionChanged: (checked: boolean) => void,
         onClick: (event: MouseEvent) => void,
+        selected: Array<Object>,
+        options: Array<Object>,
+        disable: boolean,
     }
 
-    onChecked = (e: {target: {checked: boolean}}) => {
-        const {onSelectionChanged} = this.props;
-        const {checked} = e.target;
+    onChecked = (e: { target: { checked: boolean } }) => {
+        const { onSelectionChanged } = this.props;
+        const { checked } = e.target;
 
         onSelectionChanged(checked);
     }
 
     toggleChecked = () => {
-        const {checked, onSelectionChanged} = this.props;
+        const { checked, onSelectionChanged } = this.props;
         onSelectionChanged(!checked);
     }
 
     handleClick = (e: MouseEvent) => {
-        const {onClick} = this.props;
+        const { onClick } = this.props;
         this.toggleChecked();
         onClick(e);
 
@@ -83,7 +88,7 @@ class SelectItem extends Component {
     }
 
     updateFocus() {
-        const {focused} = this.props;
+        const { focused } = this.props;
 
         if (focused && this.itemRef) {
             this.itemRef.focus();
@@ -104,29 +109,44 @@ class SelectItem extends Component {
     }
 
     render() {
-        const {ItemRenderer, option, checked, focused} = this.props;
-        const {hovered} = this.state;
+        const { ItemRenderer, option, checked, focused, selected, options, disable } = this.props;
+        const { hovered } = this.state;
 
         const focusStyle = (focused || hovered)
             ? styles.itemContainerHover
             : undefined;
+
+        let o = _.clone(option);
+        if (o.level && _.isNumber(o.level)) {
+            //add indent space to hierarchical item, 
+            //3 whitespace each level, trim() is for backward compatible
+            if(o.label){
+                o.label = '   '.repeat(o.level) + o.label.trim();
+            }
+            else if(o.text){
+                o.text = '   '.repeat(o.level) + o.text.trim();
+            }
+        }
 
         return <label
             role="option"
             aria-selected={checked}
             selected={checked}
             tabIndex="-1"
-            style={{...styles.itemContainer, ...focusStyle}}
+            style={{ ...styles.itemContainer, ...focusStyle, ...(disable?styles.disable:styles.enable)}}
             onClick={this.handleClick}
             ref={ref => this.itemRef = ref}
             onKeyDown={this.handleKeyDown}
-            onMouseOver={() => this.setState({hovered: true})}
-            onMouseOut={() => this.setState({hovered: false})}
+            onMouseOver={() => this.setState({ hovered: true })}
+            onMouseOut={() => this.setState({ hovered: false })}
         >
             <ItemRenderer
-                option={option}
+                option={o}
                 checked={checked}
                 onClick={this.handleClick}
+                selected={selected}
+                options={options}
+                disable = {disable}
             />
         </label>;
     }
@@ -147,13 +167,22 @@ const styles = {
         backgroundColor: 'rgba(0,0,0,0.06)',
         outline: 0,
     },
+    disable:{
+        color: 'rgba(0, 0, 0, 0.27)',
+        cursor: 'default',
+    },
+    enable:{
+        color: 'rgba(0, 0, 0, 0.87)',
+        cursor: 'pointer',
+    },
     label: {
         display: 'inline-block',
         verticalAlign: 'middle',
         borderBottomRightRadius: '2px',
         borderTopRightRadius: '2px',
-        cursor: 'default',
         padding: '2px 5px',
+        whiteSpace:'pre',
+        wordWrap:'normal'
     },
 };
 

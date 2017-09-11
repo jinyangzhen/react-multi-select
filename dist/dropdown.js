@@ -150,9 +150,13 @@ var Dropdown = function (_Component) {
 
             var hoverHeaderStyle = hovered && !hasFocus && !expanded ? styles.dropdownHeaderHover : undefined;
 
-            var arrowStyle = expanded ? styles.dropdownArrowUp : styles.dropdownArrowDown;
+            // const arrowStyle = expanded
+            //     ? styles.dropdownArrowUp
+            //     : styles.dropdownArrowDown;
 
-            var focusedArrowStyle = hasFocus ? styles.dropdownArrowDownFocused : undefined;
+            // const focusedArrowStyle = hasFocus || expanded
+            //     ? styles.dropdownArrowDownFocused
+            //     : undefined;
 
             return _react2.default.createElement(
                 'div',
@@ -181,8 +185,7 @@ var Dropdown = function (_Component) {
                         style: _extends({}, styles.dropdownHeader, expandedHeaderStyle, hoverHeaderStyle, focusedHeaderStyle),
                         onClick: function onClick() {
                             return _this2.toggleExpanded();
-                        }
-                    },
+                        } },
                     _react2.default.createElement(
                         'span',
                         { style: styles.dropdownChildren },
@@ -196,7 +199,7 @@ var Dropdown = function (_Component) {
                     _react2.default.createElement(
                         'span',
                         { style: styles.dropdownArrow },
-                        _react2.default.createElement('span', { style: _extends({}, arrowStyle, focusedArrowStyle)
+                        _react2.default.createElement('span', { style: _extends({}, styles.dropdownArrowDown)
                         })
                     )
                 ),
@@ -223,28 +226,28 @@ var styles = {
     },
     dropdownArrowDown: {
         boxSizing: 'border-box',
-        borderColor: '#999 transparent transparent',
+        borderColor: 'rgb(204, 204, 204) transparent transparent',
         borderStyle: 'solid',
-        borderWidth: '5px 5px 2.5px',
+        borderWidth: '4px 4px 2px',
         display: 'inline-block',
         height: 0,
         width: 0,
         position: 'relative'
     },
-    dropdownArrowDownFocused: {
-        borderColor: focusColor + ' transparent transparent'
-    },
-    dropdownArrowUp: {
-        boxSizing: 'border-box',
-        top: '-2px',
-        borderColor: 'transparent transparent #999',
-        borderStyle: 'solid',
-        borderWidth: '0px 5px 5px',
-        display: 'inline-block',
-        height: 0,
-        width: 0,
-        position: 'relative'
-    },
+    // dropdownArrowDownFocused: {
+    //     borderColor: `${focusColor} transparent transparent`,
+    // },
+    // dropdownArrowUp: {
+    //     boxSizing: 'border-box',
+    //     top: '-2px',
+    //     borderColor: 'transparent transparent #999',
+    //     borderStyle: 'solid',
+    //     borderWidth: '0px 5px 5px',
+    //     display: 'inline-block',
+    //     height: 0,
+    //     width: 0,
+    //     position: 'relative',
+    // },
     dropdownChildren: {
         boxSizing: 'border-box',
         bottom: 0,
@@ -287,14 +290,14 @@ var styles = {
         width: '100%'
     },
     dropdownHeaderFocused: {
-        borderColor: '#96C8DA!important',
+        borderColor: '#96C8DA',
         boxShadow: 'none'
     },
     dropdownHeaderHover: {
         borderColor: 'rgba(34, 36, 38, 0.35)'
     },
     dropdownHeaderExpanded: {
-        borderColor: '#96C8DA #96C8DA #96C8DA',
+        borderColor: '#96C8DA',
         borderBottomRightRadius: '0px',
         borderBottomLeftRadius: '0px'
     },
@@ -317,7 +320,7 @@ var styles = {
         position: 'absolute',
         top: '100%',
         width: '100%',
-        zIndex: 1,
+        zIndex: 99,
         overflowY: 'auto'
     }
 };

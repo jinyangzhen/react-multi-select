@@ -10,6 +10,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _selectItem = require('./select-item.js');
 
 var _selectItem2 = _interopRequireDefault(_selectItem);
@@ -47,14 +51,32 @@ var SelectList = function (_Component) {
                 selected = _this$props.selected,
                 onSelectedChanged = _this$props.onSelectedChanged;
 
+            var currentSelected = selected;
 
             if (checked) {
-                onSelectedChanged([].concat(_toConsumableArray(selected), [option.value]));
+                currentSelected = [].concat(_toConsumableArray(selected), [option.value]);
             } else {
                 var _index = selected.indexOf(option.value);
-                var removed = [].concat(_toConsumableArray(selected.slice(0, _index)), _toConsumableArray(selected.slice(_index + 1)));
-                onSelectedChanged(removed);
+                currentSelected = [].concat(_toConsumableArray(selected.slice(0, _index)), _toConsumableArray(selected.slice(_index + 1)));
             }
+
+            if (option.level) {
+                //if hierarchical item, to compute highest menu (lowest level)
+                _this.activeLevel = 99;
+
+                _lodash2.default.each(_this.props.options, function (o) {
+                    if (currentSelected.indexOf(o.value) >= 0 && o.level && o.level < _this.activeLevel) {
+                        _this.activeLevel = o.level;
+                    }
+                });
+
+                currentSelected = _lodash2.default.filter(currentSelected, function (s) {
+                    var o = _lodash2.default.find(_this.props.options, { value: s });
+                    return o.level <= _this.activeLevel;
+                });
+            }
+
+            onSelectedChanged(currentSelected);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -95,7 +117,10 @@ var SelectList = function (_Component) {
                         }(function (e) {
                             return onClick(e, i);
                         }),
-                        ItemRenderer: ItemRenderer
+                        ItemRenderer: ItemRenderer,
+                        selected: selected,
+                        options: options,
+                        disable: o.level ? o.level > _this2.activeLevel : false
                     })
                 );
             });

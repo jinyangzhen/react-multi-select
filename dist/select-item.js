@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -8,9 +8,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34,26 +38,28 @@ var DefaultItemRenderer = function (_Component) {
     }
 
     _createClass(DefaultItemRenderer, [{
-        key: "render",
+        key: 'render',
         value: function render() {
             var _props = this.props,
                 checked = _props.checked,
                 option = _props.option,
-                onClick = _props.onClick;
+                onClick = _props.onClick,
+                disable = _props.disable;
 
 
             return _react2.default.createElement(
-                "span",
+                'span',
                 null,
-                _react2.default.createElement("input", {
-                    type: "checkbox",
+                _react2.default.createElement('input', {
+                    type: 'checkbox',
                     onChange: onClick,
                     checked: checked,
-                    tabIndex: "-1"
+                    tabIndex: '-1',
+                    disabled: disable
                 }),
                 _react2.default.createElement(
-                    "span",
-                    { style: styles.label },
+                    'span',
+                    { style: _extends({}, styles.label, disable ? styles.disable : styles.enable) },
                     option.label
                 )
             );
@@ -114,17 +120,17 @@ var SelectItem = function (_Component2) {
     }
 
     _createClass(SelectItem, [{
-        key: "componentDidMount",
+        key: 'componentDidMount',
         value: function componentDidMount() {
             this.updateFocus();
         }
     }, {
-        key: "componentDidUpdate",
+        key: 'componentDidUpdate',
         value: function componentDidUpdate() {
             this.updateFocus();
         }
     }, {
-        key: "updateFocus",
+        key: 'updateFocus',
         value: function updateFocus() {
             var focused = this.props.focused;
 
@@ -134,7 +140,7 @@ var SelectItem = function (_Component2) {
             }
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             var _this3 = this;
 
@@ -142,20 +148,34 @@ var SelectItem = function (_Component2) {
                 ItemRenderer = _props2.ItemRenderer,
                 option = _props2.option,
                 checked = _props2.checked,
-                focused = _props2.focused;
+                focused = _props2.focused,
+                selected = _props2.selected,
+                options = _props2.options,
+                disable = _props2.disable;
             var hovered = this.state.hovered;
 
 
             var focusStyle = focused || hovered ? styles.itemContainerHover : undefined;
 
+            var o = _lodash2.default.clone(option);
+            if (o.level && _lodash2.default.isNumber(o.level)) {
+                //add indent space to hierarchical item, 
+                //3 whitespace each level, trim() is for backward compatible
+                if (o.label) {
+                    o.label = '   '.repeat(o.level) + o.label.trim();
+                } else if (o.text) {
+                    o.text = '   '.repeat(o.level) + o.text.trim();
+                }
+            }
+
             return _react2.default.createElement(
-                "label",
+                'label',
                 {
-                    role: "option",
-                    "aria-selected": checked,
+                    role: 'option',
+                    'aria-selected': checked,
                     selected: checked,
-                    tabIndex: "-1",
-                    style: _extends({}, styles.itemContainer, focusStyle),
+                    tabIndex: '-1',
+                    style: _extends({}, styles.itemContainer, focusStyle, disable ? styles.disable : styles.enable),
                     onClick: this.handleClick,
                     ref: function ref(_ref2) {
                         return _this3.itemRef = _ref2;
@@ -169,9 +189,12 @@ var SelectItem = function (_Component2) {
                     }
                 },
                 _react2.default.createElement(ItemRenderer, {
-                    option: option,
+                    option: o,
                     checked: checked,
-                    onClick: this.handleClick
+                    onClick: this.handleClick,
+                    selected: selected,
+                    options: options,
+                    disable: disable
                 })
             );
         }
@@ -199,13 +222,22 @@ var styles = {
         backgroundColor: 'rgba(0,0,0,0.06)',
         outline: 0
     },
+    disable: {
+        color: 'rgba(0, 0, 0, 0.27)',
+        cursor: 'default'
+    },
+    enable: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        cursor: 'pointer'
+    },
     label: {
         display: 'inline-block',
         verticalAlign: 'middle',
         borderBottomRightRadius: '2px',
         borderTopRightRadius: '2px',
-        cursor: 'default',
-        padding: '2px 5px'
+        padding: '2px 5px',
+        whiteSpace: 'pre',
+        wordWrap: 'normal'
     }
 };
 

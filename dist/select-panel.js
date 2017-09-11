@@ -162,7 +162,7 @@ var SelectPanel = function (_Component) {
 
 
             var selectAllOption = {
-                label: selectAllLabel || "Select All",
+                label: selectAllLabel,
                 value: ""
             };
 
@@ -191,7 +191,7 @@ var SelectPanel = function (_Component) {
                         }
                     })
                 ) : '',
-                _react2.default.createElement(_selectItem2.default, {
+                selectAllLabel ? _react2.default.createElement(_selectItem2.default, {
                     focused: focusIndex === 0,
                     checked: this.allAreSelected(),
                     option: selectAllOption,
@@ -199,8 +199,7 @@ var SelectPanel = function (_Component) {
                     onClick: function onClick() {
                         return _this2.handleItemClicked(0);
                     },
-                    ItemRenderer: ItemRenderer
-                }),
+                    ItemRenderer: ItemRenderer }) : '',
                 _react2.default.createElement(_selectList2.default, _extends({}, this.props, {
                     options: this.filteredOptions(),
                     focusIndex: focusIndex - 1,

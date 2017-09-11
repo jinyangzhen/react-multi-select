@@ -13,6 +13,12 @@ const shortList = [
     {label: "Jane Doe", value: 3},
 ];
 
+const ladderList = [
+    {label: "Brian Genisio", value: 1, level: 1},
+    {label: "John Doe", value: 2, level: 2},
+    {label: "Jane Doe", value: 3, level: 2},
+];
+
 const longList = [...Array(26).keys()]
     .map(value => {
         const label = String.fromCharCode(97 + value); // A-Z
@@ -192,7 +198,9 @@ class StudentItemRenderer extends Component {
 
 storiesOf('MultiSelect', module)
     .add('default view', () => <StatefulMultiSelect options={shortList} />)
+    .add('default view with ladder list', () => <StatefulMultiSelect options={ladderList} />)
     .add('default view with Search input', () => <StatefulMultiSelect options={shortList} enableSearch={true} />)
+    .add('default view with Search All', () => <StatefulMultiSelect options={shortList} selectAllLabel='Select All' />)
     .add('long list view', () => <StatefulMultiSelect options={longList} />)
     .add('United States', () => <StatefulMultiSelect options={statesList} />)
     .add('Custom Heading Renderer', () => <StatefulMultiSelect
