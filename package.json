@@ -1,6 +1,6 @@
 {
   "name": "simple-multi-select",
-  "version": "0.2.9",
+  "version": "0.3.3",
   "description": "A simple port from React Multi Select Component https://github.com/khan/react-multi-select",
   "repository": {
     "type": "git",
@@ -53,7 +53,8 @@
   },
   "dependencies": {
     "fuzzy-match-utils": "^1.2.0",
-    "lodash":"^4.17.4"
+    "lodash": "^4.17.4",
+    "style-it": "^1.6.13"
   },
   "main": "dist/index.js",
   "engines": {

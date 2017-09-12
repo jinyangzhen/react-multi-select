@@ -5,5 +5,5 @@ module.exports = {
         libraryTarget: "commonjs",
         // ...
     },
-    externals: ["react", "fuzzy-match-utils"],
+    externals: ["react", "fuzzy-match-utils", "lodash"],
 };

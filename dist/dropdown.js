@@ -12,6 +12,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _styleIt = require('style-it');
+
+var _styleIt2 = _interopRequireDefault(_styleIt);
+
 var _loadingIndicator = require('./loading-indicator.js');
 
 var _loadingIndicator2 = _interopRequireDefault(_loadingIndicator);
@@ -47,7 +51,8 @@ var Dropdown = function (_Component) {
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
             expanded: false,
             hasFocus: false,
-            hovered: false
+            hovered: false,
+            clearable: false
         }, _this.handleDocumentClick = function (event) {
             if (_this.wrapper && !_this.wrapper.contains(event.target)) {
                 _this.setState({ expanded: false });
@@ -105,6 +110,11 @@ var Dropdown = function (_Component) {
     }
 
     _createClass(Dropdown, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            this.setState({ clearable: this.props.contentProps.selected.length > 0 });
+        }
+    }, {
         key: 'componentWillUpdate',
         value: function componentWillUpdate() {
             document.addEventListener('touchstart', this.handleDocumentClick);
@@ -119,15 +129,25 @@ var Dropdown = function (_Component) {
     }, {
         key: 'renderPanel',
         value: function renderPanel() {
+            var self = this;
             var _props = this.props,
                 ContentComponent = _props.contentComponent,
                 contentProps = _props.contentProps;
 
 
+            var relay = contentProps.onSelectedChanged;
+
+            //react on onSelectedChanged called by sub component SelectPanel, make sure show close btn if non empty
+            contentProps['onSelectedChanged'] = function (values) {
+                self.setState({ clearable: values.length > 0 });
+                //rely selected values
+                relay(values);
+            };
+
             return _react2.default.createElement(
                 'div',
                 { style: styles.panelContainer },
-                _react2.default.createElement(ContentComponent, contentProps)
+                _react2.default.createElement(ContentComponent, _extends({ ref: 'selectPanel' }, contentProps))
             );
         }
     }, {
@@ -135,13 +155,16 @@ var Dropdown = function (_Component) {
         value: function render() {
             var _this2 = this;
 
+            var self = this;
             var _state = this.state,
                 expanded = _state.expanded,
                 hasFocus = _state.hasFocus,
-                hovered = _state.hovered;
+                hovered = _state.hovered,
+                clearable = _state.clearable;
             var _props2 = this.props,
                 children = _props2.children,
-                isLoading = _props2.isLoading;
+                isLoading = _props2.isLoading,
+                contentProps = _props2.contentProps;
 
 
             var expandedHeaderStyle = expanded ? styles.dropdownHeaderExpanded : undefined;
@@ -158,6 +181,8 @@ var Dropdown = function (_Component) {
             //     ? styles.dropdownArrowDownFocused
             //     : undefined;
 
+            console.log('hover ' + hovered);
+
             return _react2.default.createElement(
                 'div',
                 {
@@ -172,23 +197,26 @@ var Dropdown = function (_Component) {
                     onKeyDown: this.handleKeyDown,
                     onFocus: this.handleFocus,
                     onBlur: this.handleBlur,
-                    onMouseOver: function onMouseOver() {
+                    onMouseEnter: function onMouseEnter() {
                         return _this2.setState({ hovered: true });
                     },
-                    onMouseOut: function onMouseOut() {
+                    onMouseLeave: function onMouseLeave() {
                         return _this2.setState({ hovered: false });
                     }
                 },
                 _react2.default.createElement(
+                    _styleIt2.default,
+                    null,
+                    xClass
+                ),
+                _react2.default.createElement(
                     'div',
-                    {
-                        style: _extends({}, styles.dropdownHeader, expandedHeaderStyle, hoverHeaderStyle, focusedHeaderStyle),
-                        onClick: function onClick() {
-                            return _this2.toggleExpanded();
-                        } },
+                    { style: _extends({}, styles.dropdownHeader, expandedHeaderStyle, hoverHeaderStyle, focusedHeaderStyle) },
                     _react2.default.createElement(
                         'span',
-                        { style: styles.dropdownChildren },
+                        { style: styles.dropdownChildren, onClick: function onClick() {
+                                return _this2.toggleExpanded();
+                            } },
                         children
                     ),
                     _react2.default.createElement(
@@ -196,9 +224,21 @@ var Dropdown = function (_Component) {
                         { style: styles.loadingContainer },
                         isLoading && _react2.default.createElement(_loadingIndicator2.default, null)
                     ),
+                    (expanded || hovered) && clearable ? _react2.default.createElement('span', { className: 'xButton', onClick: function onClick(e) {
+                            if (self.refs.selectPanel) {
+                                self.refs.selectPanel.selectNone();
+                            } else {
+                                contentProps.onSelectedChanged([]);
+                                self.setState({ clearable: false });
+                            }
+                            e.stopPropagation();
+                            e.preventDefault();
+                        } }) : '',
                     _react2.default.createElement(
                         'span',
-                        { style: styles.dropdownArrow },
+                        { style: styles.dropdownArrow, onClick: function onClick() {
+                                return _this2.toggleExpanded();
+                            } },
                         _react2.default.createElement('span', { style: _extends({}, styles.dropdownArrowDown)
                         })
                     )
@@ -210,6 +250,8 @@ var Dropdown = function (_Component) {
 
     return Dropdown;
 }(_react.Component);
+
+var xClass = '\n                .xButton {\n                    display: table-cell;\n                    position: relative;\n                    width: 16px;\n                    height: 16px;\n                    transition: transform .25s ease-in-out;\n                }\n                .xButton:before {\n                    content: "";\n                    position: absolute;\n                    display: block;\n                    margin: auto;\n                    left: 0;\n                    right: 0;\n                    top: 0;\n                    bottom: 0;\n                    width: 16px;\n                    height: 0;\n                    border-top: 1px solid rgba(0,0,0,0.5);\n                    transform: rotate(45deg);\n                    transform-origin: center;\n                }\n                .xButton:after {\n                    content: "";\n                    position: absolute;\n                    display: block;\n                    margin: auto;\n                    left: 0;\n                    right: 0;\n                    top: 0;\n                    bottom: 0;\n                    width: 16px;\n                    height: 0;\n                    border-top: 1px solid rgba(0,0,0,0.5);\n                    transform: rotate(-45deg);\n                    transform-origin: center;\n                }\n                .xButton:hover {\n                    cursor:pointer;\n                }\n';
 
 var focusColor = '';
 

@@ -158,7 +158,7 @@ var SelectItem = function (_Component2) {
             var focusStyle = focused || hovered ? styles.itemContainerHover : undefined;
 
             var o = _lodash2.default.clone(option);
-            if (o.level && _lodash2.default.isNumber(o.level)) {
+            if (o.level && _lodash2.default.isNumber(o.level) && o.level >= 0) {
                 //add indent space to hierarchical item, 
                 //3 whitespace each level, trim() is for backward compatible
                 if (o.label) {

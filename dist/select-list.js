@@ -49,7 +49,8 @@ var SelectList = function (_Component) {
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SelectList.__proto__ || Object.getPrototypeOf(SelectList)).call.apply(_ref, [this].concat(args))), _this), _this.handleSelectionChanged = function (option, checked) {
             var _this$props = _this.props,
                 selected = _this$props.selected,
-                onSelectedChanged = _this$props.onSelectedChanged;
+                onSelectedChanged = _this$props.onSelectedChanged,
+                options = _this$props.options;
 
             var currentSelected = selected;
 
@@ -60,16 +61,8 @@ var SelectList = function (_Component) {
                 currentSelected = [].concat(_toConsumableArray(selected.slice(0, _index)), _toConsumableArray(selected.slice(_index + 1)));
             }
 
-            if (option.level) {
-                //if hierarchical item, to compute highest menu (lowest level)
-                _this.activeLevel = 99;
-
-                _lodash2.default.each(_this.props.options, function (o) {
-                    if (currentSelected.indexOf(o.value) >= 0 && o.level && o.level < _this.activeLevel) {
-                        _this.activeLevel = o.level;
-                    }
-                });
-
+            if (option.level !== undefined && option.level !== null) {
+                _this.computeActiveLevel(currentSelected, options);
                 currentSelected = _lodash2.default.filter(currentSelected, function (s) {
                     var o = _lodash2.default.find(_this.props.options, { value: s });
                     return o.level <= _this.activeLevel;
@@ -81,9 +74,23 @@ var SelectList = function (_Component) {
     }
 
     _createClass(SelectList, [{
+        key: 'computeActiveLevel',
+        value: function computeActiveLevel(selected, options) {
+            var _this2 = this;
+
+            //if hierarchical item, to compute topest menu (lowest level)
+            this.activeLevel = 99;
+
+            _lodash2.default.each(options, function (o) {
+                if (selected.indexOf(o.value) >= 0 && o.level && o.level < _this2.activeLevel) {
+                    _this2.activeLevel = o.level;
+                }
+            });
+        }
+    }, {
         key: 'renderItems',
         value: function renderItems() {
-            var _this2 = this;
+            var _this3 = this;
 
             var _props = this.props,
                 ItemRenderer = _props.ItemRenderer,
@@ -93,6 +100,8 @@ var SelectList = function (_Component) {
                 onClick = _props.onClick;
 
 
+            this.computeActiveLevel(selected, options);
+
             return options.map(function (o, i) {
                 return _react2.default.createElement(
                     'li',
@@ -101,7 +110,7 @@ var SelectList = function (_Component) {
                         focused: focusIndex === i,
                         option: o,
                         onSelectionChanged: function onSelectionChanged(c) {
-                            return _this2.handleSelectionChanged(o, c);
+                            return _this3.handleSelectionChanged(o, c);
                         },
                         checked: selected.includes(o.value),
                         onClick: function (_onClick) {
@@ -120,7 +129,7 @@ var SelectList = function (_Component) {
                         ItemRenderer: ItemRenderer,
                         selected: selected,
                         options: options,
-                        disable: o.level ? o.level > _this2.activeLevel : false
+                        disable: o.level ? o.level > _this3.activeLevel : false
                     })
                 );
             });

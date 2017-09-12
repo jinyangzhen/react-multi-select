@@ -22,8 +22,19 @@ class SelectList extends Component {
 
     activeLevel;
 
+    computeActiveLevel(selected, options) {
+        //if hierarchical item, to compute topest menu (lowest level)
+        this.activeLevel = 99;
+
+        _.each(options, (o) => {
+            if (selected.indexOf(o.value) >= 0 && o.level && o.level < this.activeLevel) {
+                this.activeLevel = o.level;
+            }
+        });
+    }
+
     handleSelectionChanged = (option: Option, checked: boolean) => {
-        const { selected, onSelectedChanged } = this.props;
+        const { selected, onSelectedChanged, options } = this.props;
         let currentSelected = selected;
 
         if (checked) {
@@ -36,18 +47,10 @@ class SelectList extends Component {
             ];
         }
 
-        if (option.level) {
-            //if hierarchical item, to compute highest menu (lowest level)
-            this.activeLevel = 99;
-
-            _.each(this.props.options, (o) => {
-                if (currentSelected.indexOf(o.value) >= 0 && o.level && o.level < this.activeLevel) {
-                    this.activeLevel = o.level;
-                }
-            });
-
+        if (option.level !== undefined && option.level !== null) {
+            this.computeActiveLevel(currentSelected, options);
             currentSelected = _.filter(currentSelected, (s) => {
-                const o = _.find(this.props.options, {value:s});
+                const o = _.find(this.props.options, { value: s });
                 return o.level <= this.activeLevel;
             });
         }
@@ -63,6 +66,8 @@ class SelectList extends Component {
             focusIndex,
             onClick,
         } = this.props;
+
+        this.computeActiveLevel(selected, options);
 
         return options.map((o, i) =>
             <li style={styles.listItem} key={i}>

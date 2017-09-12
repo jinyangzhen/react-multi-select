@@ -5,7 +5,7 @@
  * drops-down the contentComponent and applies the contentProps.
  */
 import React, { Component } from 'react';
-
+import Style from 'style-it';
 import LoadingIndicator from './loading-indicator.js';
 
 class Dropdown extends Component {
@@ -14,6 +14,11 @@ class Dropdown extends Component {
         expanded: false,
         hasFocus: false,
         hovered: false,
+        clearable: false,
+    }
+
+    componentWillMount() {
+        this.setState({ clearable: this.props.contentProps.selected.length > 0 });
     }
 
     componentWillUpdate() {
@@ -93,16 +98,27 @@ class Dropdown extends Component {
     }
 
     renderPanel() {
+        let self = this;
         const { contentComponent: ContentComponent, contentProps } = this.props;
 
+        let relay = contentProps.onSelectedChanged;
+
+        //react on onSelectedChanged called by sub component SelectPanel, make sure show close btn if non empty
+        contentProps['onSelectedChanged'] = (values) => {
+            self.setState({ clearable: values.length > 0 });
+            //rely selected values
+            relay(values);
+        }
+
         return <div style={styles.panelContainer}>
-            <ContentComponent {...contentProps} />
+            <ContentComponent ref='selectPanel' {...contentProps} />
         </div>;
     }
 
     render() {
-        const { expanded, hasFocus, hovered } = this.state;
-        const { children, isLoading } = this.props;
+        const self = this;
+        const { expanded, hasFocus, hovered, clearable } = this.state;
+        const { children, isLoading, contentProps } = this.props;
 
         const expandedHeaderStyle = expanded
             ? styles.dropdownHeaderExpanded
@@ -114,7 +130,7 @@ class Dropdown extends Component {
 
         const hoverHeaderStyle = hovered && !hasFocus && !expanded
             ? styles.dropdownHeaderHover
-            : undefined;    
+            : undefined;
 
         // const arrowStyle = expanded
         //     ? styles.dropdownArrowUp
@@ -123,6 +139,8 @@ class Dropdown extends Component {
         // const focusedArrowStyle = hasFocus || expanded
         //     ? styles.dropdownArrowDownFocused
         //     : undefined;
+
+        console.log(`hover ${hovered}`);
 
         return <div
             tabIndex="0"
@@ -134,28 +152,40 @@ class Dropdown extends Component {
             onKeyDown={this.handleKeyDown}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
-            onMouseOver={() => this.setState({hovered: true})}
-            onMouseOut={() => this.setState({hovered: false})}
-            >
-            <div
-                style={{
-                    ...styles.dropdownHeader,
-                    ...expandedHeaderStyle,
-                    ...hoverHeaderStyle,
-                    ...focusedHeaderStyle,
-                }}
-                onClick={() => this.toggleExpanded()} >
-                <span style={styles.dropdownChildren}>
+            onMouseEnter={() => this.setState({ hovered: true })}
+            onMouseLeave={() => this.setState({ hovered: false })}
+        >
+            <Style>{xClass}</Style>
+            <div style={{
+                ...styles.dropdownHeader,
+                ...expandedHeaderStyle,
+                ...hoverHeaderStyle,
+                ...focusedHeaderStyle,
+            }} >
+                <span style={styles.dropdownChildren} onClick={() => this.toggleExpanded()}>
                     {children}
                 </span>
                 <span style={styles.loadingContainer}>
                     {isLoading && <LoadingIndicator />}
                 </span>
-                <span style={styles.dropdownArrow}>
+                {
+                    (expanded || hovered) && clearable ? <span className='xButton' onClick={(e) => {
+                        if (self.refs.selectPanel) {
+                            self.refs.selectPanel.selectNone();
+                        }
+                        else {
+                            contentProps.onSelectedChanged([]);
+                            self.setState({ clearable: false })
+                        }
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }} /> : ''
+                }
+                <span style={styles.dropdownArrow} onClick={() => this.toggleExpanded()}>
                     <span style={{
-                      //  ...arrowStyle,
-                      //  ...focusedArrowStyle,
-                      ...styles.dropdownArrowDown,
+                        //  ...arrowStyle,
+                        //  ...focusedArrowStyle,
+                        ...styles.dropdownArrowDown,
                     }}
                     />
                 </span>
@@ -164,6 +194,49 @@ class Dropdown extends Component {
         </div>;
     }
 }
+
+const xClass = `
+                .xButton {
+                    display: table-cell;
+                    position: relative;
+                    width: 16px;
+                    height: 16px;
+                    transition: transform .25s ease-in-out;
+                }
+                .xButton:before {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    margin: auto;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 16px;
+                    height: 0;
+                    border-top: 1px solid rgba(0,0,0,0.5);
+                    transform: rotate(45deg);
+                    transform-origin: center;
+                }
+                .xButton:after {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    margin: auto;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 16px;
+                    height: 0;
+                    border-top: 1px solid rgba(0,0,0,0.5);
+                    transform: rotate(-45deg);
+                    transform-origin: center;
+                }
+                .xButton:hover {
+                    cursor:pointer;
+                }
+`
 
 const focusColor = '';
 
@@ -247,7 +320,7 @@ const styles = {
         borderColor: '#96C8DA',
         boxShadow: 'none',
     },
-    dropdownHeaderHover:{
+    dropdownHeaderHover: {
         borderColor: 'rgba(34, 36, 38, 0.35)'
     },
     dropdownHeaderExpanded: {

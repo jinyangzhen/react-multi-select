@@ -29,7 +29,7 @@ class DefaultItemRenderer extends Component {
                 tabIndex="-1"
                 disabled={disable}
             />
-            <span style={{...styles.label, ...(disable?styles.disable:styles.enable)}}> 
+            <span style={{ ...styles.label, ...(disable ? styles.disable : styles.enable) }}>
                 {option.label}
             </span>
         </span>;
@@ -117,13 +117,13 @@ class SelectItem extends Component {
             : undefined;
 
         let o = _.clone(option);
-        if (o.level && _.isNumber(o.level)) {
+        if (o.level && _.isNumber(o.level) && o.level >= 0) {
             //add indent space to hierarchical item, 
             //3 whitespace each level, trim() is for backward compatible
-            if(o.label){
+            if (o.label) {
                 o.label = '   '.repeat(o.level) + o.label.trim();
             }
-            else if(o.text){
+            else if (o.text) {
                 o.text = '   '.repeat(o.level) + o.text.trim();
             }
         }
@@ -133,7 +133,7 @@ class SelectItem extends Component {
             aria-selected={checked}
             selected={checked}
             tabIndex="-1"
-            style={{ ...styles.itemContainer, ...focusStyle, ...(disable?styles.disable:styles.enable)}}
+            style={{ ...styles.itemContainer, ...focusStyle, ...(disable ? styles.disable : styles.enable) }}
             onClick={this.handleClick}
             ref={ref => this.itemRef = ref}
             onKeyDown={this.handleKeyDown}
@@ -146,7 +146,7 @@ class SelectItem extends Component {
                 onClick={this.handleClick}
                 selected={selected}
                 options={options}
-                disable = {disable}
+                disable={disable}
             />
         </label>;
     }
@@ -167,11 +167,11 @@ const styles = {
         backgroundColor: 'rgba(0,0,0,0.06)',
         outline: 0,
     },
-    disable:{
+    disable: {
         color: 'rgba(0, 0, 0, 0.27)',
         cursor: 'default',
     },
-    enable:{
+    enable: {
         color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'pointer',
     },
@@ -181,8 +181,8 @@ const styles = {
         borderBottomRightRadius: '2px',
         borderTopRightRadius: '2px',
         padding: '2px 5px',
-        whiteSpace:'pre',
-        wordWrap:'normal'
+        whiteSpace: 'pre',
+        wordWrap: 'normal'
     },
 };
 
