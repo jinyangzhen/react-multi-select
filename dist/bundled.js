@@ -761,7 +761,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  */
 
 
-function isLeaf(option) {
+function defaultIsLeaf(option, options) {
     //TODO, assume type of leaf level value is always not Array or stringified Array, this may not be true in future and probably to further involve 'level' to justify  
     if (_lodash2.default.isArray(option.value)) {
         return false;
@@ -796,11 +796,13 @@ var SelectPanel = function (_Component) {
         }, _this.selectAll = function () {
             var _this$props = _this.props,
                 onSelectedChanged = _this$props.onSelectedChanged,
-                options = _this$props.options;
+                options = _this$props.options,
+                isLeafChecker = _this$props.isLeafChecker;
 
+            var isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
             var allValues = _lodash2.default.chain(options).map(function (o) {
                 return isLeaf(o) ? o.value : null;
-            }).compact().value();
+            }).without([null, undefined]).value();
 
             onSelectedChanged(allValues);
         }, _this.selectNone = function () {
@@ -860,11 +862,13 @@ var SelectPanel = function (_Component) {
         value: function allAreSelected() {
             var _props = this.props,
                 options = _props.options,
-                selected = _props.selected;
+                selected = _props.selected,
+                isLeafChecker = _props.isLeafChecker;
 
+            var isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
             var leafs = _lodash2.default.chain(options).map(function (o) {
-                return isLeaf(o) ? o.value : null;
-            }).compact().value();
+                return isLeaf(o, options) ? o.value : null;
+            }).without([null, undefined]).value();
             return leafs.length === selected.length;
         }
     }, {
@@ -1115,7 +1119,8 @@ var SimpleMultiSelect = function (_Component) {
                 onSelectedChanged = _props3.onSelectedChanged,
                 isLoading = _props3.isLoading,
                 enableSearch = _props3.enableSearch,
-                leafOnly = _props3.leafOnly;
+                leafOnly = _props3.leafOnly,
+                isLeafChecker = _props3.isLeafChecker;
 
 
             return _react2.default.createElement(
@@ -1130,7 +1135,8 @@ var SimpleMultiSelect = function (_Component) {
                         selectAllLabel: selectAllLabel,
                         onSelectedChanged: onSelectedChanged,
                         enableSearch: enableSearch,
-                        leafOnly: leafOnly
+                        leafOnly: leafOnly,
+                        isLeafChecker: isLeafChecker
                     }
                 },
                 this.renderHeader()

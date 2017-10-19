@@ -117,7 +117,8 @@ var SimpleMultiSelect = function (_Component) {
                 onSelectedChanged = _props3.onSelectedChanged,
                 isLoading = _props3.isLoading,
                 enableSearch = _props3.enableSearch,
-                leafOnly = _props3.leafOnly;
+                leafOnly = _props3.leafOnly,
+                isLeafChecker = _props3.isLeafChecker;
 
 
             return _react2.default.createElement(
@@ -132,7 +133,8 @@ var SimpleMultiSelect = function (_Component) {
                         selectAllLabel: selectAllLabel,
                         onSelectedChanged: onSelectedChanged,
                         enableSearch: enableSearch,
-                        leafOnly: leafOnly
+                        leafOnly: leafOnly,
+                        isLeafChecker: isLeafChecker
                     }
                 },
                 this.renderHeader()

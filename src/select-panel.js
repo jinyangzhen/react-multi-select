@@ -15,7 +15,7 @@ import type {
 } from './select-item.js';
 
 
-function isLeaf(option) {
+function defaultIsLeaf(option, options) {
     //TODO, assume type of leaf level value is always not Array or stringified Array, this may not be true in future and probably to further involve 'level' to justify  
     if (_.isArray(option.value)) {
         return false;
@@ -44,11 +44,13 @@ class SelectPanel extends Component {
         enableSearch?: boolean,
         onSelectedChanged: (selected: Array<any>) => void,
         leafOnly?:boolean,
+        isLeafChecker?:Function,
     }
 
     selectAll = () => {
-        const { onSelectedChanged, options } = this.props;
-        const allValues = _.chain(options).map(o => isLeaf(o) ? o.value : null).compact().value();
+        const { onSelectedChanged, options, isLeafChecker } = this.props;
+        const isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
+        const allValues = _.chain(options).map(o => isLeaf(o) ? o.value : null).without([null, undefined]).value();
 
         onSelectedChanged(allValues);
     }
@@ -114,8 +116,9 @@ class SelectPanel extends Component {
     }
 
     allAreSelected() {
-        const { options, selected } = this.props;
-        const leafs = _.chain(options).map(o => isLeaf(o) ? o.value : null).compact().value();
+        const { options, selected, isLeafChecker } = this.props;
+        const isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
+        const leafs = _.chain(options).map(o => isLeaf(o, options) ? o.value : null).without([null, undefined]).value();
         return leafs.length === selected.length;
     }
 

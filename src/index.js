@@ -35,6 +35,7 @@ class SimpleMultiSelect extends Component {
         isLoading?: boolean,
         enableSearch?:boolean,
         leafOnly?:boolean,
+        isLeafChecker?:Function,
     }
 
     getSelectedText() {
@@ -88,6 +89,7 @@ class SimpleMultiSelect extends Component {
             isLoading,
             enableSearch,
             leafOnly,
+            isLeafChecker,
         } = this.props;
 
         return <Dropdown
@@ -101,6 +103,7 @@ class SimpleMultiSelect extends Component {
                 onSelectedChanged,
                 enableSearch,
                 leafOnly,
+                isLeafChecker,
             }}
         >
             {this.renderHeader()}
