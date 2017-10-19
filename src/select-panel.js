@@ -4,15 +4,30 @@
  * user selects the component.  It encapsulates the search filter, the
  * Select-all item, and the list of options.
  */
-import {filterOptions} from 'fuzzy-match-utils';
-import React, {Component} from 'react';
-
+import { filterOptions } from 'fuzzy-match-utils';
+import React, { Component } from 'react';
+import _ from 'lodash';
 import SelectItem from './select-item.js';
 import SelectList from './select-list.js';
 
 import type {
     Option,
 } from './select-item.js';
+
+
+function isLeaf(option) {
+    //TODO, assume type of leaf level value is always not Array or stringified Array, this may not be true in future and probably to further involve 'level' to justify  
+    if (_.isArray(option.value)) {
+        return false;
+    } else if (typeof option.value === 'string' && option.value.startsWith('[')) {
+        try {
+            let v = JSON.parse(option.value);
+            return false;
+        } catch (ex) { }
+    }
+
+    return true;
+}
 
 class SelectPanel extends Component {
     state = {
@@ -28,17 +43,18 @@ class SelectPanel extends Component {
         selectAllLabel?: string,
         enableSearch?: boolean,
         onSelectedChanged: (selected: Array<any>) => void,
+        leafOnly?:boolean,
     }
 
     selectAll = () => {
-        const {onSelectedChanged, options} = this.props;
-        const allValues = options.map(o => o.value);
+        const { onSelectedChanged, options } = this.props;
+        const allValues = _.chain(options).map(o => isLeaf(o) ? o.value : null).compact().value();
 
         onSelectedChanged(allValues);
     }
 
     selectNone = () => {
-        const {onSelectedChanged} = this.props;
+        const { onSelectedChanged } = this.props;
 
         onSelectedChanged([]);
     }
@@ -51,7 +67,7 @@ class SelectPanel extends Component {
         }
     }
 
-    handleSearchChange = (e: {target: {value: any}}) => {
+    handleSearchChange = (e: { target: { value: any } }) => {
         this.setState({
             searchText: e.target.value,
             focusIndex: -1,
@@ -59,11 +75,11 @@ class SelectPanel extends Component {
     }
 
     handleItemClicked = (index: number) => {
-        this.setState({focusIndex: index});
+        this.setState({ focusIndex: index });
     }
 
     clearSearch = () => {
-        this.setState({searchText: ""});
+        this.setState({ searchText: "" });
     }
 
     handleKeyDown = (e: KeyboardEvent) => {
@@ -98,31 +114,32 @@ class SelectPanel extends Component {
     }
 
     allAreSelected() {
-        const {options, selected} = this.props;
-        return options.length === selected.length;
+        const { options, selected } = this.props;
+        const leafs = _.chain(options).map(o => isLeaf(o) ? o.value : null).compact().value();
+        return leafs.length === selected.length;
     }
 
     filteredOptions() {
-        const {searchText} = this.state;
-        const {options} = this.props;
+        const { searchText } = this.state;
+        const { options } = this.props;
 
         return filterOptions(options, searchText);
     }
 
     updateFocus(offset: number) {
-        const {focusIndex} = this.state;
-        const {options} = this.props;
+        const { focusIndex } = this.state;
+        const { options } = this.props;
 
         let newFocus = focusIndex + offset;
         newFocus = Math.max(0, newFocus);
         newFocus = Math.min(newFocus, options.length);
 
-        this.setState({focusIndex: newFocus});
+        this.setState({ focusIndex: newFocus });
     }
 
     render() {
-        const {focusIndex, searchHasFocus} = this.state;
-        const {ItemRenderer, selectAllLabel, enableSearch} = this.props;
+        const { focusIndex, searchHasFocus } = this.state;
+        const { ItemRenderer, selectAllLabel, enableSearch, leafOnly } = this.props;
 
         const selectAllOption = {
             label: selectAllLabel,
@@ -138,35 +155,36 @@ class SelectPanel extends Component {
             role="listbox"
             onKeyDown={this.handleKeyDown}
         >
-           {
+            {
                 enableSearch ? <div style={styles.searchContainer}>
                     <input
                         placeholder="Search"
                         type="text"
                         onChange={this.handleSearchChange}
-                        style={{...styles.search, ...focusedSearchStyle}}
+                        style={{ ...styles.search, ...focusedSearchStyle }}
                         onFocus={() => this.handleSearchFocus(true)}
                         onBlur={() => this.handleSearchFocus(false)}
                     />
                 </div> : ''
-           } 
-           {  
-               selectAllLabel
-               ? <SelectItem
-                    focused={focusIndex === 0}
-                    checked={this.allAreSelected()}
-                    option={selectAllOption}
-                    onSelectionChanged={this.selectAllChanged}
-                    onClick={() => this.handleItemClicked(0)}
-                    ItemRenderer={ItemRenderer} /> : ''
             }
-
+            {
+                selectAllLabel
+                    ? <SelectItem
+                        focused={focusIndex === 0}
+                        checked={this.allAreSelected()}
+                        option={selectAllOption}
+                        onSelectionChanged={this.selectAllChanged}
+                        onClick={() => this.handleItemClicked(0)}
+                        selectable={true}
+                        ItemRenderer={ItemRenderer} /> : ''
+            }
             <SelectList
                 {...this.props}
                 options={this.filteredOptions()}
                 focusIndex={focusIndex - 1}
                 onClick={(e, index) => this.handleItemClicked(index + 1)}
                 ItemRenderer={ItemRenderer}
+                leafOnly={leafOnly}
             />
         </div>;
     }
@@ -174,7 +192,7 @@ class SelectPanel extends Component {
 
 const styles = {
     panel: {
-        boxSizing : 'border-box',
+        boxSizing: 'border-box',
     },
     search: {
         display: "block",
@@ -182,7 +200,7 @@ const styles = {
         maxWidth: "100%",
         borderRadius: "3px",
 
-        boxSizing : 'border-box',
+        boxSizing: 'border-box',
         height: '30px',
         lineHeight: '24px',
         border: '1px solid',
@@ -196,7 +214,7 @@ const styles = {
     },
     searchContainer: {
         width: "100%",
-        boxSizing : 'border-box',
+        boxSizing: 'border-box',
         padding: "0.5em",
     },
 };

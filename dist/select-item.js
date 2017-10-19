@@ -44,19 +44,21 @@ var DefaultItemRenderer = function (_Component) {
                 checked = _props.checked,
                 option = _props.option,
                 onClick = _props.onClick,
-                disable = _props.disable;
+                disable = _props.disable,
+                selectable = _props.selectable;
 
+            var toggel = void 0;
+
+            console.log(option.label + ' - disable: ' + disable + ' - checked: ' + checked);
+
+            if (selectable) {
+                toggel = _react2.default.createElement('input', { type: 'checkbox', onChange: onClick, checked: checked, tabIndex: '-1', disabled: disable });
+            }
 
             return _react2.default.createElement(
                 'span',
                 null,
-                _react2.default.createElement('input', {
-                    type: 'checkbox',
-                    onChange: onClick,
-                    checked: checked,
-                    tabIndex: '-1',
-                    disabled: disable
-                }),
+                toggel,
                 _react2.default.createElement(
                     'span',
                     { style: _extends({}, styles.label, disable ? styles.disable : styles.enable) },
@@ -151,7 +153,8 @@ var SelectItem = function (_Component2) {
                 focused = _props2.focused,
                 selected = _props2.selected,
                 options = _props2.options,
-                disable = _props2.disable;
+                disable = _props2.disable,
+                selectable = _props2.selectable;
             var hovered = this.state.hovered;
 
 
@@ -162,9 +165,9 @@ var SelectItem = function (_Component2) {
                 //add indent space to hierarchical item, 
                 //3 whitespace each level, trim() is for backward compatible
                 if (o.label) {
-                    o.label = '   '.repeat(o.level) + o.label.trim();
+                    o.label = ' '.repeat(3 * o.level) + o.label.trim();
                 } else if (o.text) {
-                    o.text = '   '.repeat(o.level) + o.text.trim();
+                    o.text = ' '.repeat(3 * o.level) + o.text.trim();
                 }
             }
 
@@ -174,13 +177,14 @@ var SelectItem = function (_Component2) {
                     role: 'option',
                     'aria-selected': checked,
                     selected: checked,
+                    title: o.text,
                     tabIndex: '-1',
-                    style: _extends({}, styles.itemContainer, focusStyle, disable ? styles.disable : styles.enable),
-                    onClick: this.handleClick,
-                    ref: function ref(_ref2) {
+                    style: _extends({}, styles.itemContainer, focusStyle, disable ? styles.disable : styles.enable, selectable ? {} : styles.unselectable),
+                    onClick: selectable ? this.handleClick : Function.prototype //false do nothing
+                    , ref: function ref(_ref2) {
                         return _this3.itemRef = _ref2;
                     },
-                    onKeyDown: this.handleKeyDown,
+                    onKeyDown: selectable ? this.handleKeyDown : Function.prototype,
                     onMouseOver: function onMouseOver() {
                         return _this3.setState({ hovered: true });
                     },
@@ -194,7 +198,8 @@ var SelectItem = function (_Component2) {
                     onClick: this.handleClick,
                     selected: selected,
                     options: options,
-                    disable: disable
+                    disable: disable,
+                    selectable: selectable
                 })
             );
         }
@@ -224,6 +229,10 @@ var styles = {
     },
     disable: {
         color: 'rgba(0, 0, 0, 0.27)',
+        cursor: 'default'
+    },
+    unselectable: {
+        color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default'
     },
     enable: {

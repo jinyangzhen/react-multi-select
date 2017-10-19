@@ -18,6 +18,7 @@ class SelectList extends Component {
         selected: Array<Object>,
         onSelectedChanged: (selected: any) => void,
         onClick: (event: MouseEvent, index: number) => void,
+        leafOnly?:boolean,
     }
 
     activeLevel;
@@ -65,9 +66,11 @@ class SelectList extends Component {
             selected,
             focusIndex,
             onClick,
+            leafOnly,
         } = this.props;
 
         this.computeActiveLevel(selected, options);
+        let leafObj = _.maxBy(options, 'level');
 
         return options.map((o, i) =>
             <li style={styles.listItem} key={i}>
@@ -81,6 +84,7 @@ class SelectList extends Component {
                     selected={selected}
                     options={options}
                     disable={o.level ? o.level > this.activeLevel : false}
+                    selectable={leafOnly ? o.level === leafObj.level : true}
                 />
             </li>
         );

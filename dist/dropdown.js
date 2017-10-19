@@ -164,7 +164,8 @@ var Dropdown = function (_Component) {
             var _props2 = this.props,
                 children = _props2.children,
                 isLoading = _props2.isLoading,
-                contentProps = _props2.contentProps;
+                contentProps = _props2.contentProps,
+                leafOnly = _props2.leafOnly;
 
 
             var expandedHeaderStyle = expanded ? styles.dropdownHeaderExpanded : undefined;
@@ -358,7 +359,7 @@ var styles = {
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.06)',
         boxSizing: 'border-box',
         marginTop: '-1px',
-        maxHeight: '300px',
+        maxHeight: '500px',
         position: 'absolute',
         top: '100%',
         width: '100%',

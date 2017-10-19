@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 import {storiesOf} from '@kadira/storybook';
-import MultiSelect from '../index.js';
+import SimpleMultiSelect from '../index.js';
 
 import type {
     Option,
@@ -14,7 +14,7 @@ const shortList = [
 ];
 
 const ladderList = [
-    {label: "Brian Genisio", value: 1, level: 1},
+    {label: "Does", value: '[2,3]', level: 1},
     {label: "John Doe", value: 2, level: 2},
     {label: "Jane Doe", value: 3, level: 2},
 ];
@@ -122,7 +122,8 @@ class StatefulMultiSelect extends Component {
         ItemRenderer?: Function,
         selectAllLabel?: string,
         isLoading?: boolean,
-        enableSearch?:boolean
+        enableSearch?:boolean,
+        leafOnly?:boolean
     }
 
     handleSelectedChanged(selected) {
@@ -137,11 +138,12 @@ class StatefulMultiSelect extends Component {
             valueRenderer,
             isLoading,
             enableSearch,
+            leafOnly,
         } = this.props;
         const {selected} = this.state;
 
         return <div>
-            <MultiSelect
+            <SimpleMultiSelect
                 options={options}
                 onSelectedChanged={this.handleSelectedChanged.bind(this)}
                 selected={selected}
@@ -150,6 +152,7 @@ class StatefulMultiSelect extends Component {
                 selectAllLabel={selectAllLabel}
                 isLoading={isLoading}
                 enableSearch = {enableSearch}
+                leafOnly = {leafOnly}
             />
 
         <h2>Selected:</h2>
@@ -201,6 +204,8 @@ storiesOf('MultiSelect', module)
     .add('default view with ladder list', () => <StatefulMultiSelect options={ladderList} />)
     .add('default view with Search input', () => <StatefulMultiSelect options={shortList} enableSearch={true} />)
     .add('default view with Search All', () => <StatefulMultiSelect options={shortList} selectAllLabel='Select All' />)
+    .add('default view with Search All and Ladder list', () => <StatefulMultiSelect options={ladderList} selectAllLabel='Select All' />)
+    .add('default view with Search All and Ladder list and leafOnly', () => <StatefulMultiSelect options={ladderList} selectAllLabel='Select All' leafOnly={true}/>)    
     .add('long list view', () => <StatefulMultiSelect options={longList} />)
     .add('United States', () => <StatefulMultiSelect options={statesList} />)
     .add('Custom Heading Renderer', () => <StatefulMultiSelect

@@ -41,16 +41,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  */
 
 
-var MultiSelect = function (_Component) {
-    _inherits(MultiSelect, _Component);
+var SimpleMultiSelect = function (_Component) {
+    _inherits(SimpleMultiSelect, _Component);
 
-    function MultiSelect() {
-        _classCallCheck(this, MultiSelect);
+    function SimpleMultiSelect() {
+        _classCallCheck(this, SimpleMultiSelect);
 
-        return _possibleConstructorReturn(this, (MultiSelect.__proto__ || Object.getPrototypeOf(MultiSelect)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (SimpleMultiSelect.__proto__ || Object.getPrototypeOf(SimpleMultiSelect)).apply(this, arguments));
     }
 
-    _createClass(MultiSelect, [{
+    _createClass(SimpleMultiSelect, [{
         key: 'getSelectedText',
         value: function getSelectedText() {
             var _props = this.props,
@@ -116,7 +116,8 @@ var MultiSelect = function (_Component) {
                 selectAllLabel = _props3.selectAllLabel,
                 onSelectedChanged = _props3.onSelectedChanged,
                 isLoading = _props3.isLoading,
-                enableSearch = _props3.enableSearch;
+                enableSearch = _props3.enableSearch,
+                leafOnly = _props3.leafOnly;
 
 
             return _react2.default.createElement(
@@ -130,7 +131,8 @@ var MultiSelect = function (_Component) {
                         selected: selected,
                         selectAllLabel: selectAllLabel,
                         onSelectedChanged: onSelectedChanged,
-                        enableSearch: enableSearch
+                        enableSearch: enableSearch,
+                        leafOnly: leafOnly
                     }
                 },
                 this.renderHeader()
@@ -138,7 +140,7 @@ var MultiSelect = function (_Component) {
         }
     }]);
 
-    return MultiSelect;
+    return SimpleMultiSelect;
 }(_react.Component);
 
 var styles = {
@@ -147,5 +149,5 @@ var styles = {
     }
 };
 
-exports.default = MultiSelect;
+exports.default = SimpleMultiSelect;
 exports.Dropdown = _dropdown2.default;

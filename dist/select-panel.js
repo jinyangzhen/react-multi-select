@@ -14,6 +14,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _selectItem = require('./select-item.js');
 
 var _selectItem2 = _interopRequireDefault(_selectItem);
@@ -35,6 +39,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Select-all item, and the list of options.
  */
 
+
+function isLeaf(option) {
+    //TODO, assume type of leaf level value is always not Array or stringified Array, this may not be true in future and probably to further involve 'level' to justify  
+    if (_lodash2.default.isArray(option.value)) {
+        return false;
+    } else if (typeof option.value === 'string' && option.value.startsWith('[')) {
+        try {
+            var v = JSON.parse(option.value);
+            return false;
+        } catch (ex) {}
+    }
+
+    return true;
+}
 
 var SelectPanel = function (_Component) {
     _inherits(SelectPanel, _Component);
@@ -59,9 +77,9 @@ var SelectPanel = function (_Component) {
                 onSelectedChanged = _this$props.onSelectedChanged,
                 options = _this$props.options;
 
-            var allValues = options.map(function (o) {
-                return o.value;
-            });
+            var allValues = _lodash2.default.chain(options).map(function (o) {
+                return isLeaf(o) ? o.value : null;
+            }).compact().value();
 
             onSelectedChanged(allValues);
         }, _this.selectNone = function () {
@@ -123,7 +141,10 @@ var SelectPanel = function (_Component) {
                 options = _props.options,
                 selected = _props.selected;
 
-            return options.length === selected.length;
+            var leafs = _lodash2.default.chain(options).map(function (o) {
+                return isLeaf(o) ? o.value : null;
+            }).compact().value();
+            return leafs.length === selected.length;
         }
     }, {
         key: 'filteredOptions',
@@ -158,7 +179,8 @@ var SelectPanel = function (_Component) {
             var _props2 = this.props,
                 ItemRenderer = _props2.ItemRenderer,
                 selectAllLabel = _props2.selectAllLabel,
-                enableSearch = _props2.enableSearch;
+                enableSearch = _props2.enableSearch,
+                leafOnly = _props2.leafOnly;
 
 
             var selectAllOption = {
@@ -199,6 +221,7 @@ var SelectPanel = function (_Component) {
                     onClick: function onClick() {
                         return _this2.handleItemClicked(0);
                     },
+                    selectable: true,
                     ItemRenderer: ItemRenderer }) : '',
                 _react2.default.createElement(_selectList2.default, _extends({}, this.props, {
                     options: this.filteredOptions(),
@@ -206,7 +229,8 @@ var SelectPanel = function (_Component) {
                     onClick: function onClick(e, index) {
                         return _this2.handleItemClicked(index + 1);
                     },
-                    ItemRenderer: ItemRenderer
+                    ItemRenderer: ItemRenderer,
+                    leafOnly: leafOnly
                 }))
             );
         }

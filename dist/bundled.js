@@ -74,6 +74,12 @@ module.exports = require("react");
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+module.exports = require("lodash");
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -91,7 +97,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _lodash = __webpack_require__(2);
+var _lodash = __webpack_require__(1);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -123,19 +129,21 @@ var DefaultItemRenderer = function (_Component) {
                 checked = _props.checked,
                 option = _props.option,
                 onClick = _props.onClick,
-                disable = _props.disable;
+                disable = _props.disable,
+                selectable = _props.selectable;
 
+            var toggel = void 0;
+
+            console.log(option.label + ' - disable: ' + disable + ' - checked: ' + checked);
+
+            if (selectable) {
+                toggel = _react2.default.createElement('input', { type: 'checkbox', onChange: onClick, checked: checked, tabIndex: '-1', disabled: disable });
+            }
 
             return _react2.default.createElement(
                 'span',
                 null,
-                _react2.default.createElement('input', {
-                    type: 'checkbox',
-                    onChange: onClick,
-                    checked: checked,
-                    tabIndex: '-1',
-                    disabled: disable
-                }),
+                toggel,
                 _react2.default.createElement(
                     'span',
                     { style: _extends({}, styles.label, disable ? styles.disable : styles.enable) },
@@ -230,7 +238,8 @@ var SelectItem = function (_Component2) {
                 focused = _props2.focused,
                 selected = _props2.selected,
                 options = _props2.options,
-                disable = _props2.disable;
+                disable = _props2.disable,
+                selectable = _props2.selectable;
             var hovered = this.state.hovered;
 
 
@@ -241,9 +250,9 @@ var SelectItem = function (_Component2) {
                 //add indent space to hierarchical item, 
                 //3 whitespace each level, trim() is for backward compatible
                 if (o.label) {
-                    o.label = '   '.repeat(o.level) + o.label.trim();
+                    o.label = ' '.repeat(3 * o.level) + o.label.trim();
                 } else if (o.text) {
-                    o.text = '   '.repeat(o.level) + o.text.trim();
+                    o.text = ' '.repeat(3 * o.level) + o.text.trim();
                 }
             }
 
@@ -253,13 +262,14 @@ var SelectItem = function (_Component2) {
                     role: 'option',
                     'aria-selected': checked,
                     selected: checked,
+                    title: o.text,
                     tabIndex: '-1',
-                    style: _extends({}, styles.itemContainer, focusStyle, disable ? styles.disable : styles.enable),
-                    onClick: this.handleClick,
-                    ref: function ref(_ref2) {
+                    style: _extends({}, styles.itemContainer, focusStyle, disable ? styles.disable : styles.enable, selectable ? {} : styles.unselectable),
+                    onClick: selectable ? this.handleClick : Function.prototype //false do nothing
+                    , ref: function ref(_ref2) {
                         return _this3.itemRef = _ref2;
                     },
-                    onKeyDown: this.handleKeyDown,
+                    onKeyDown: selectable ? this.handleKeyDown : Function.prototype,
                     onMouseOver: function onMouseOver() {
                         return _this3.setState({ hovered: true });
                     },
@@ -273,7 +283,8 @@ var SelectItem = function (_Component2) {
                     onClick: this.handleClick,
                     selected: selected,
                     options: options,
-                    disable: disable
+                    disable: disable,
+                    selectable: selectable
                 })
             );
         }
@@ -305,6 +316,10 @@ var styles = {
         color: 'rgba(0, 0, 0, 0.27)',
         cursor: 'default'
     },
+    unselectable: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        cursor: 'default'
+    },
     enable: {
         color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'pointer'
@@ -321,12 +336,6 @@ var styles = {
 };
 
 exports.default = SelectItem;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-module.exports = require("lodash");
 
 /***/ }),
 /* 3 */
@@ -499,7 +508,8 @@ var Dropdown = function (_Component) {
             var _props2 = this.props,
                 children = _props2.children,
                 isLoading = _props2.isLoading,
-                contentProps = _props2.contentProps;
+                contentProps = _props2.contentProps,
+                leafOnly = _props2.leafOnly;
 
 
             var expandedHeaderStyle = expanded ? styles.dropdownHeaderExpanded : undefined;
@@ -693,7 +703,7 @@ var styles = {
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.06)',
         boxSizing: 'border-box',
         marginTop: '-1px',
-        maxHeight: '300px',
+        maxHeight: '500px',
         position: 'absolute',
         top: '100%',
         width: '100%',
@@ -725,7 +735,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _selectItem = __webpack_require__(1);
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _selectItem = __webpack_require__(2);
 
 var _selectItem2 = _interopRequireDefault(_selectItem);
 
@@ -746,6 +760,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Select-all item, and the list of options.
  */
 
+
+function isLeaf(option) {
+    //TODO, assume type of leaf level value is always not Array or stringified Array, this may not be true in future and probably to further involve 'level' to justify  
+    if (_lodash2.default.isArray(option.value)) {
+        return false;
+    } else if (typeof option.value === 'string' && option.value.startsWith('[')) {
+        try {
+            var v = JSON.parse(option.value);
+            return false;
+        } catch (ex) {}
+    }
+
+    return true;
+}
 
 var SelectPanel = function (_Component) {
     _inherits(SelectPanel, _Component);
@@ -770,9 +798,9 @@ var SelectPanel = function (_Component) {
                 onSelectedChanged = _this$props.onSelectedChanged,
                 options = _this$props.options;
 
-            var allValues = options.map(function (o) {
-                return o.value;
-            });
+            var allValues = _lodash2.default.chain(options).map(function (o) {
+                return isLeaf(o) ? o.value : null;
+            }).compact().value();
 
             onSelectedChanged(allValues);
         }, _this.selectNone = function () {
@@ -834,7 +862,10 @@ var SelectPanel = function (_Component) {
                 options = _props.options,
                 selected = _props.selected;
 
-            return options.length === selected.length;
+            var leafs = _lodash2.default.chain(options).map(function (o) {
+                return isLeaf(o) ? o.value : null;
+            }).compact().value();
+            return leafs.length === selected.length;
         }
     }, {
         key: 'filteredOptions',
@@ -869,7 +900,8 @@ var SelectPanel = function (_Component) {
             var _props2 = this.props,
                 ItemRenderer = _props2.ItemRenderer,
                 selectAllLabel = _props2.selectAllLabel,
-                enableSearch = _props2.enableSearch;
+                enableSearch = _props2.enableSearch,
+                leafOnly = _props2.leafOnly;
 
 
             var selectAllOption = {
@@ -910,6 +942,7 @@ var SelectPanel = function (_Component) {
                     onClick: function onClick() {
                         return _this2.handleItemClicked(0);
                     },
+                    selectable: true,
                     ItemRenderer: ItemRenderer }) : '',
                 _react2.default.createElement(_selectList2.default, _extends({}, this.props, {
                     options: this.filteredOptions(),
@@ -917,7 +950,8 @@ var SelectPanel = function (_Component) {
                     onClick: function onClick(e, index) {
                         return _this2.handleItemClicked(index + 1);
                     },
-                    ItemRenderer: ItemRenderer
+                    ItemRenderer: ItemRenderer,
+                    leafOnly: leafOnly
                 }))
             );
         }
@@ -1005,16 +1039,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  */
 
 
-var MultiSelect = function (_Component) {
-    _inherits(MultiSelect, _Component);
+var SimpleMultiSelect = function (_Component) {
+    _inherits(SimpleMultiSelect, _Component);
 
-    function MultiSelect() {
-        _classCallCheck(this, MultiSelect);
+    function SimpleMultiSelect() {
+        _classCallCheck(this, SimpleMultiSelect);
 
-        return _possibleConstructorReturn(this, (MultiSelect.__proto__ || Object.getPrototypeOf(MultiSelect)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (SimpleMultiSelect.__proto__ || Object.getPrototypeOf(SimpleMultiSelect)).apply(this, arguments));
     }
 
-    _createClass(MultiSelect, [{
+    _createClass(SimpleMultiSelect, [{
         key: 'getSelectedText',
         value: function getSelectedText() {
             var _props = this.props,
@@ -1080,7 +1114,8 @@ var MultiSelect = function (_Component) {
                 selectAllLabel = _props3.selectAllLabel,
                 onSelectedChanged = _props3.onSelectedChanged,
                 isLoading = _props3.isLoading,
-                enableSearch = _props3.enableSearch;
+                enableSearch = _props3.enableSearch,
+                leafOnly = _props3.leafOnly;
 
 
             return _react2.default.createElement(
@@ -1094,7 +1129,8 @@ var MultiSelect = function (_Component) {
                         selected: selected,
                         selectAllLabel: selectAllLabel,
                         onSelectedChanged: onSelectedChanged,
-                        enableSearch: enableSearch
+                        enableSearch: enableSearch,
+                        leafOnly: leafOnly
                     }
                 },
                 this.renderHeader()
@@ -1102,7 +1138,7 @@ var MultiSelect = function (_Component) {
         }
     }]);
 
-    return MultiSelect;
+    return SimpleMultiSelect;
 }(_react.Component);
 
 var styles = {
@@ -1111,7 +1147,7 @@ var styles = {
     }
 };
 
-exports.default = MultiSelect;
+exports.default = SimpleMultiSelect;
 exports.Dropdown = _dropdown2.default;
 
 /***/ }),
@@ -1240,11 +1276,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _lodash = __webpack_require__(2);
+var _lodash = __webpack_require__(1);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _selectItem = __webpack_require__(1);
+var _selectItem = __webpack_require__(2);
 
 var _selectItem2 = _interopRequireDefault(_selectItem);
 
@@ -1327,10 +1363,12 @@ var SelectList = function (_Component) {
                 options = _props.options,
                 selected = _props.selected,
                 focusIndex = _props.focusIndex,
-                onClick = _props.onClick;
+                onClick = _props.onClick,
+                leafOnly = _props.leafOnly;
 
 
             this.computeActiveLevel(selected, options);
+            var leafObj = _lodash2.default.maxBy(options, 'level');
 
             return options.map(function (o, i) {
                 return _react2.default.createElement(
@@ -1359,7 +1397,8 @@ var SelectList = function (_Component) {
                         ItemRenderer: ItemRenderer,
                         selected: selected,
                         options: options,
-                        disable: o.level ? o.level > _this3.activeLevel : false
+                        disable: o.level ? o.level > _this3.activeLevel : false,
+                        selectable: leafOnly ? o.level === leafObj.level : true
                     })
                 );
             });

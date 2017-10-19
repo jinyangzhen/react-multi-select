@@ -97,10 +97,12 @@ var SelectList = function (_Component) {
                 options = _props.options,
                 selected = _props.selected,
                 focusIndex = _props.focusIndex,
-                onClick = _props.onClick;
+                onClick = _props.onClick,
+                leafOnly = _props.leafOnly;
 
 
             this.computeActiveLevel(selected, options);
+            var leafObj = _lodash2.default.maxBy(options, 'level');
 
             return options.map(function (o, i) {
                 return _react2.default.createElement(
@@ -129,7 +131,8 @@ var SelectList = function (_Component) {
                         ItemRenderer: ItemRenderer,
                         selected: selected,
                         options: options,
-                        disable: o.level ? o.level > _this3.activeLevel : false
+                        disable: o.level ? o.level > _this3.activeLevel : false,
+                        selectable: leafOnly ? o.level === leafObj.level : true
                     })
                 );
             });

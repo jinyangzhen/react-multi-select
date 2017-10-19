@@ -36,6 +36,7 @@ class Dropdown extends Component {
         contentComponent: Object,
         contentProps: Object,
         isLoading?: boolean,
+        leafOnly?:boolean,
     }
 
     wrapper: Object
@@ -118,7 +119,7 @@ class Dropdown extends Component {
     render() {
         const self = this;
         const { expanded, hasFocus, hovered, clearable } = this.state;
-        const { children, isLoading, contentProps } = this.props;
+        const { children, isLoading, contentProps, leafOnly } = this.props;
 
         const expandedHeaderStyle = expanded
             ? styles.dropdownHeaderExpanded
@@ -343,7 +344,7 @@ const styles = {
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.06)',
         boxSizing: 'border-box',
         marginTop: '-1px',
-        maxHeight: '300px',
+        maxHeight: '500px',
         position: 'absolute',
         top: '100%',
         width: '100%',

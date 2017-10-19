@@ -16,19 +16,21 @@ class DefaultItemRenderer extends Component {
         option: Option,
         onClick: (event: MouseEvent) => void,
         disable: boolean,
+        selectable: boolean,
     }
 
     render() {
-        const { checked, option, onClick, disable } = this.props;
+        const { checked, option, onClick, disable, selectable } = this.props;
+        let toggel;
+
+        console.log(`${option.label} - disable: ${disable} - checked: ${checked}`);
+
+        if (selectable) {
+            toggel = <input  type="checkbox" onChange={onClick} checked={checked} tabIndex="-1" disabled={disable} />
+        }
 
         return <span>
-            <input
-                type="checkbox"
-                onChange={onClick}
-                checked={checked}
-                tabIndex="-1"
-                disabled={disable}
-            />
+            {toggel}
             <span style={{ ...styles.label, ...(disable ? styles.disable : styles.enable) }}>
                 {option.label}
             </span>
@@ -65,6 +67,7 @@ class SelectItem extends Component {
         selected: Array<Object>,
         options: Array<Object>,
         disable: boolean,
+        selectable: boolean
     }
 
     onChecked = (e: { target: { checked: boolean } }) => {
@@ -109,7 +112,7 @@ class SelectItem extends Component {
     }
 
     render() {
-        const { ItemRenderer, option, checked, focused, selected, options, disable } = this.props;
+        const { ItemRenderer, option, checked, focused, selected, options, disable, selectable } = this.props;
         const { hovered } = this.state;
 
         const focusStyle = (focused || hovered)
@@ -121,10 +124,10 @@ class SelectItem extends Component {
             //add indent space to hierarchical item, 
             //3 whitespace each level, trim() is for backward compatible
             if (o.label) {
-                o.label = '   '.repeat(o.level) + o.label.trim();
+                o.label = ' '.repeat(3 * o.level) + o.label.trim();
             }
             else if (o.text) {
-                o.text = '   '.repeat(o.level) + o.text.trim();
+                o.text = ' '.repeat(3 * o.level) + o.text.trim();
             }
         }
 
@@ -132,11 +135,12 @@ class SelectItem extends Component {
             role="option"
             aria-selected={checked}
             selected={checked}
+            title={o.text}
             tabIndex="-1"
-            style={{ ...styles.itemContainer, ...focusStyle, ...(disable ? styles.disable : styles.enable) }}
-            onClick={this.handleClick}
+            style={{ ...styles.itemContainer, ...focusStyle, ...(disable ? styles.disable : styles.enable), ...(selectable ? {} : styles.unselectable) }}
+            onClick={selectable ? this.handleClick : Function.prototype} //false do nothing
             ref={ref => this.itemRef = ref}
-            onKeyDown={this.handleKeyDown}
+            onKeyDown={selectable ? this.handleKeyDown : Function.prototype}
             onMouseOver={() => this.setState({ hovered: true })}
             onMouseOut={() => this.setState({ hovered: false })}
         >
@@ -147,11 +151,11 @@ class SelectItem extends Component {
                 selected={selected}
                 options={options}
                 disable={disable}
+                selectable={selectable}
             />
         </label>;
     }
 }
-
 
 const styles = {
     itemContainer: {
@@ -169,6 +173,10 @@ const styles = {
     },
     disable: {
         color: 'rgba(0, 0, 0, 0.27)',
+        cursor: 'default',
+    },
+    unselectable: {
+        color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
     },
     enable: {

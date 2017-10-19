@@ -21,7 +21,7 @@ import type {
     Option,
 } from './select-item.js';
 
-class MultiSelect extends Component {
+class SimpleMultiSelect extends Component {
     props: {
         options: Array<Option>,
         selected: Array<any>,
@@ -34,6 +34,7 @@ class MultiSelect extends Component {
         selectAllLabel: string,
         isLoading?: boolean,
         enableSearch?:boolean,
+        leafOnly?:boolean,
     }
 
     getSelectedText() {
@@ -86,6 +87,7 @@ class MultiSelect extends Component {
             onSelectedChanged,
             isLoading,
             enableSearch,
+            leafOnly,
         } = this.props;
 
         return <Dropdown
@@ -98,6 +100,7 @@ class MultiSelect extends Component {
                 selectAllLabel,
                 onSelectedChanged,
                 enableSearch,
+                leafOnly,
             }}
         >
             {this.renderHeader()}
@@ -111,5 +114,5 @@ const styles = {
     },
 };
 
-export default MultiSelect;
+export default SimpleMultiSelect;
 export {Dropdown};
