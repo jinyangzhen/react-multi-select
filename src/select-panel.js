@@ -50,7 +50,7 @@ class SelectPanel extends Component {
     selectAll = () => {
         const { onSelectedChanged, options, isLeafChecker } = this.props;
         const isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
-        const allValues = _.chain(options).map(o => isLeaf(o) ? o.value : null).without([null, undefined]).value();
+        const allValues = _.chain(options).map(o => isLeaf(o) ? o.value : null).without(null, undefined).value();
 
         onSelectedChanged(allValues);
     }
@@ -118,7 +118,7 @@ class SelectPanel extends Component {
     allAreSelected() {
         const { options, selected, isLeafChecker } = this.props;
         const isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
-        const leafs = _.chain(options).map(o => isLeaf(o, options) ? o.value : null).without([null, undefined]).value();
+        const leafs = _.chain(options).map(o => isLeaf(o, options) ? o.value : null).without(null, undefined).value();
         return leafs.length === selected.length;
     }
 

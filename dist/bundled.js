@@ -802,7 +802,7 @@ var SelectPanel = function (_Component) {
             var isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
             var allValues = _lodash2.default.chain(options).map(function (o) {
                 return isLeaf(o) ? o.value : null;
-            }).without([null, undefined]).value();
+            }).without(null, undefined).value();
 
             onSelectedChanged(allValues);
         }, _this.selectNone = function () {
@@ -868,7 +868,7 @@ var SelectPanel = function (_Component) {
             var isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
             var leafs = _lodash2.default.chain(options).map(function (o) {
                 return isLeaf(o, options) ? o.value : null;
-            }).without([null, undefined]).value();
+            }).without(null, undefined).value();
             return leafs.length === selected.length;
         }
     }, {
