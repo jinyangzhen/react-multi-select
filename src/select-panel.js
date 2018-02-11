@@ -50,7 +50,9 @@ class SelectPanel extends Component {
     selectAll = () => {
         const { onSelectedChanged, options, isLeafChecker } = this.props;
         const isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
-        const allValues = _.chain(options).map(o => isLeaf(o) ? o.value : null).without(null, undefined).value();
+        const allValues = _.chain(options).map((o) => {
+            return isLeaf(o, options) ? o.value : null;
+        }).without(null, undefined).value();
 
         onSelectedChanged(allValues);
     }

@@ -1,6 +1,6 @@
 // @flow
-import React, {Component} from 'react';
-import {storiesOf} from '@kadira/storybook';
+import React, { Component } from 'react';
+import { storiesOf } from '@kadira/storybook';
 import SimpleMultiSelect from '../index.js';
 
 import type {
@@ -8,21 +8,21 @@ import type {
 } from '../select-item.js';
 
 const shortList = [
-    {label: "Brian Genisio", value: 1},
-    {label: "John Doe", value: 2},
-    {label: "Jane Doe", value: 3},
+    { label: "Brian Genisio", value: 1 },
+    { label: "John Doe", value: 2 },
+    { label: "Jane Doe", value: 3 },
 ];
 
 const ladderList = [
-    {label: "Does", value: '[2,3]', level: 1},
-    {label: "John Doe", value: 2, level: 2},
-    {label: "Jane Doe", value: 3, level: 2},
+    { label: "Does", value: '[2,3]', level: 1 },
+    { label: "John Doe", value: 2, level: 2 },
+    { label: "Jane Doe", value: 3, level: 2 },
 ];
 
 const longList = [...Array(26).keys()]
     .map(value => {
         const label = String.fromCharCode(97 + value); // A-Z
-        return {label, value};
+        return { label, value };
     });
 
 const states = {
@@ -94,13 +94,13 @@ const statesList = Object.keys(states)
     }));
 
 const students = [
-    {id: 0, name: "Zach Morris"},
-    {id: 1, name: "Kelly Kapowski"},
-    {id: 2, name: "A.C. Slater"},
-    {id: 3, name: "Lisa Turtle"},
-    {id: 4, name: "Jessie Spano"},
-    {id: 5, name: "Samuel Powers"},
-    {id: 6, name: "Tori Scott"},
+    { id: 0, name: "Zach Morris" },
+    { id: 1, name: "Kelly Kapowski" },
+    { id: 2, name: "A.C. Slater" },
+    { id: 3, name: "Lisa Turtle" },
+    { id: 4, name: "Jessie Spano" },
+    { id: 5, name: "Samuel Powers" },
+    { id: 6, name: "Tori Scott" },
 ];
 
 const studentsList = students.map(s => ({
@@ -122,12 +122,13 @@ class StatefulMultiSelect extends Component {
         ItemRenderer?: Function,
         selectAllLabel?: string,
         isLoading?: boolean,
-        enableSearch?:boolean,
-        leafOnly?:boolean
+        enableSearch?: boolean,
+        leafOnly?: boolean,
+        disabled?:boolean
     }
 
     handleSelectedChanged(selected) {
-        this.setState({selected});
+        this.setState({ selected });
     }
 
     render() {
@@ -139,8 +140,9 @@ class StatefulMultiSelect extends Component {
             isLoading,
             enableSearch,
             leafOnly,
+            disabled,
         } = this.props;
-        const {selected} = this.state;
+        const { selected } = this.state;
 
         return <div>
             <SimpleMultiSelect
@@ -151,12 +153,13 @@ class StatefulMultiSelect extends Component {
                 ItemRenderer={ItemRenderer}
                 selectAllLabel={selectAllLabel}
                 isLoading={isLoading}
-                enableSearch = {enableSearch}
-                leafOnly = {leafOnly}
+                enableSearch={enableSearch}
+                leafOnly={leafOnly}
+                disabled={disabled}
             />
 
-        <h2>Selected:</h2>
-        {selected.join(', ')}
+            <h2>Selected:</h2>
+            {selected.join(', ')}
         </div>;
     }
 }
@@ -182,7 +185,7 @@ class StudentItemRenderer extends Component {
     }
 
     render() {
-        const {checked, option, onClick} = this.props;
+        const { checked, option, onClick } = this.props;
 
         return <span>
             <span>
@@ -193,7 +196,7 @@ class StudentItemRenderer extends Component {
                 onChange={onClick}
                 checked={checked}
                 tabIndex="-1"
-                style={{float: 'right'}}
+                style={{ float: 'right' }}
             />
         </span>;
     }
@@ -205,7 +208,7 @@ storiesOf('MultiSelect', module)
     .add('default view with Search input', () => <StatefulMultiSelect options={shortList} enableSearch={true} />)
     .add('default view with Search All', () => <StatefulMultiSelect options={shortList} selectAllLabel='Select All' />)
     .add('default view with Search All and Ladder list', () => <StatefulMultiSelect options={ladderList} selectAllLabel='Select All' />)
-    .add('default view with Search All and Ladder list and leafOnly', () => <StatefulMultiSelect options={ladderList} selectAllLabel='Select All' leafOnly={true}/>)    
+    .add('default view with Search All and Ladder list and leafOnly', () => <StatefulMultiSelect options={ladderList} selectAllLabel='Select All' leafOnly={true} />)
     .add('long list view', () => <StatefulMultiSelect options={longList} />)
     .add('United States', () => <StatefulMultiSelect options={statesList} />)
     .add('Custom Heading Renderer', () => <StatefulMultiSelect
@@ -214,7 +217,7 @@ storiesOf('MultiSelect', module)
         selectAllLabel="All students"
     />)
     .add('Tabbing test (accessibility)', () => <div>
-        <input/>
+        <input />
         <StatefulMultiSelect options={shortList} />
         <input type="checkbox" />
     </div>)
@@ -225,4 +228,8 @@ storiesOf('MultiSelect', module)
     .add('With loading indicator', () => <StatefulMultiSelect
         options={[]}
         isLoading={true}
+    />)
+    .add('disabled', () => <StatefulMultiSelect
+        options={studentsList}
+        disabled={true}
     />);

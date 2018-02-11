@@ -36,6 +36,7 @@ class SimpleMultiSelect extends Component {
         enableSearch?:boolean,
         leafOnly?:boolean,
         isLeafChecker?:Function,
+        disabled: boolean,
     }
 
     getSelectedText() {
@@ -90,10 +91,12 @@ class SimpleMultiSelect extends Component {
             enableSearch,
             leafOnly,
             isLeafChecker,
+            disabled,
         } = this.props;
 
         return <Dropdown
             isLoading={isLoading}
+            disabled ={disabled}
             contentComponent={SelectPanel}
             contentProps={{
                 ItemRenderer,

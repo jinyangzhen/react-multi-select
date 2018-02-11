@@ -36,7 +36,8 @@ class Dropdown extends Component {
         contentComponent: Object,
         contentProps: Object,
         isLoading?: boolean,
-        leafOnly?:boolean,
+        leafOnly?: boolean,
+        disabled?: boolean,
     }
 
     wrapper: Object
@@ -48,18 +49,20 @@ class Dropdown extends Component {
     }
 
     handleKeyDown = (e: KeyboardEvent) => {
-        switch (e.which) {
-            case 27: // Escape
-                this.toggleExpanded(false);
-                break;
-            case 38: // Up Arrow
-                this.toggleExpanded(false);
-                break;
-            case 40: // Down Arrow
-                this.toggleExpanded(true);
-                break;
-            default:
-                return;
+        if (!this.props.disabled) {
+            switch (e.which) {
+                case 27: // Escape
+                    this.toggleExpanded(false);
+                    break;
+                case 38: // Up Arrow
+                    this.toggleExpanded(false);
+                    break;
+                case 40: // Down Arrow
+                    this.toggleExpanded(true);
+                    break;
+                default:
+                    return;
+            }
         }
 
         e.preventDefault();
@@ -68,7 +71,7 @@ class Dropdown extends Component {
     handleFocus = (e: { target: any }) => {
         const { hasFocus } = this.state;
 
-        if (e.target === this.wrapper && !hasFocus) {
+        if (!this.props.disabled && e.target === this.wrapper && !hasFocus) {
             this.setState({ hasFocus: true });
         }
     }
@@ -76,7 +79,7 @@ class Dropdown extends Component {
     handleBlur = (e: { target: any }) => {
         const { hasFocus } = this.state;
 
-        if (hasFocus) {
+        if (!this.props.disabled && hasFocus) {
             this.setState({ hasFocus: false });
         }
     }
@@ -119,7 +122,7 @@ class Dropdown extends Component {
     render() {
         const self = this;
         const { expanded, hasFocus, hovered, clearable } = this.state;
-        const { children, isLoading, contentProps, leafOnly } = this.props;
+        const { children, isLoading, contentProps, disabled } = this.props;
 
         const expandedHeaderStyle = expanded
             ? styles.dropdownHeaderExpanded
@@ -141,8 +144,6 @@ class Dropdown extends Component {
         //     ? styles.dropdownArrowDownFocused
         //     : undefined;
 
-        console.log(`hover ${hovered}`);
-
         return <div
             tabIndex="0"
             role="combobox"
@@ -153,9 +154,18 @@ class Dropdown extends Component {
             onKeyDown={this.handleKeyDown}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
-            onMouseEnter={() => this.setState({ hovered: true })}
-            onMouseLeave={() => this.setState({ hovered: false })}
-        >
+            onMouseEnter={() => {
+                if (disabled) {
+                    return;
+                }
+                this.setState({ hovered: true })
+            }}
+            onMouseLeave={() => {
+                if (disabled) {
+                    return;
+                }
+                this.setState({ hovered: false })
+            }} >
             <Style>{xClass}</Style>
             <div style={{
                 ...styles.dropdownHeader,
@@ -163,7 +173,12 @@ class Dropdown extends Component {
                 ...hoverHeaderStyle,
                 ...focusedHeaderStyle,
             }} >
-                <span style={styles.dropdownChildren} onClick={() => this.toggleExpanded()}>
+                <span style={styles.dropdownChildren} onClick={() => {
+                    if (disabled) {
+                        return;
+                    }
+                    this.toggleExpanded()
+                }}>
                     {children}
                 </span>
                 <span style={styles.loadingContainer}>
@@ -171,6 +186,9 @@ class Dropdown extends Component {
                 </span>
                 {
                     (expanded || hovered) && clearable ? <span className='xButton' onClick={(e) => {
+                        if (disabled) {
+                            return;
+                        }
                         if (self.refs.selectPanel) {
                             self.refs.selectPanel.selectNone();
                         }
@@ -182,7 +200,12 @@ class Dropdown extends Component {
                         e.preventDefault();
                     }} /> : ''
                 }
-                <span style={styles.dropdownArrow} onClick={() => this.toggleExpanded()}>
+                <span style={styles.dropdownArrow} onClick={() => {
+                    if (disabled) {
+                        return;
+                    }
+                    this.toggleExpanded()
+                }}>
                     <span style={{
                         //  ...arrowStyle,
                         //  ...focusedArrowStyle,
