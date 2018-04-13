@@ -118,17 +118,24 @@ class SelectPanel extends Component {
     }
 
     allAreSelected() {
-        const { options, selected, isLeafChecker } = this.props;
+        const {options, selected, isLeafChecker} = this.props;
         const isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
         const leafs = _.chain(options).map(o => isLeaf(o, options) ? o.value : null).without(null, undefined).value();
         return leafs.length === selected.length;
     }
 
     filteredOptions() {
-        const { searchText } = this.state;
-        const { options } = this.props;
+        const {searchText} = this.state;
+        const {options} = this.props;
+        const op = _.map(options, (o) => {
+            if (!o.label){
+                return _.assign(o, {label:o.text});
+            } else {
+                return o;
+            }
+        });
 
-        return filterOptions(options, searchText);
+        return filterOptions(op, searchText);
     }
 
     updateFocus(offset: number) {

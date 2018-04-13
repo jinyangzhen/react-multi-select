@@ -8,9 +8,9 @@ import type {
 } from '../select-item.js';
 
 const shortList = [
-    { label: "Brian Genisio", value: 1 },
-    { label: "John Doe", value: 2 },
-    { label: "Jane Doe", value: 3 },
+    { text: "Brian Genisio", value: 1 },
+    { text: "John Doe", value: 2 },
+    { text: "Jane Doe", value: 3 },
 ];
 
 const ladderList = [
