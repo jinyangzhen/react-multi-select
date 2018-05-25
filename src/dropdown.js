@@ -144,7 +144,7 @@ class Dropdown extends Component {
         //     ? styles.dropdownArrowDownFocused
         //     : undefined;
 
-        return <div
+        return <div id='simple-multiple-select'
             tabIndex="0"
             role="combobox"
             aria-expanded={expanded}
@@ -200,7 +200,7 @@ class Dropdown extends Component {
                         e.preventDefault();
                     }} /> : ''
                 }
-                <span style={styles.dropdownArrow} onClick={() => {
+                <span id='dropdown-arrow' style={styles.dropdownArrow} onClick={() => {
                     if (disabled) {
                         return;
                     }
