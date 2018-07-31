@@ -52,7 +52,7 @@ class SelectList extends Component {
             this.computeActiveLevel(currentSelected, options);
             currentSelected = _.filter(currentSelected, (s) => {
                 const o = _.find(this.props.options, { value: s });
-                return o.level <= this.activeLevel;
+                return o && o.level <= this.activeLevel;
             });
         }
 
