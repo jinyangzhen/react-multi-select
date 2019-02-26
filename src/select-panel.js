@@ -45,6 +45,7 @@ class SelectPanel extends Component {
         onSelectedChanged: (selected: Array<any>) => void,
         leafOnly?:boolean,
         isLeafChecker?:Function,
+        searchFunc?:Function
     }
 
     selectAll = () => {
@@ -126,7 +127,7 @@ class SelectPanel extends Component {
 
     filteredOptions() {
         const {searchText} = this.state;
-        const {options} = this.props;
+        const {options,searchFunc} = this.props;
         const op = _.map(options, (o) => {
             if (!o.label){
                 return _.assign(o, {label:o.text});
@@ -135,7 +136,7 @@ class SelectPanel extends Component {
             }
         });
 
-        return filterOptions(op, searchText);
+        return searchFunc?searchFunc(op, searchText):filterOptions(op, searchText);
     }
 
     updateFocus(offset: number) {
