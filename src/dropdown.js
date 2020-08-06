@@ -169,6 +169,7 @@ class Dropdown extends Component {
             <Style>{xClass}</Style>
             <div style={{
                 ...styles.dropdownHeader,
+                ...(disabled ? styles.disable : styles.enable),
                 ...expandedHeaderStyle,
                 ...hoverHeaderStyle,
                 ...focusedHeaderStyle,
@@ -339,6 +340,12 @@ const styles = {
         overflow: 'hidden',
         position: 'relative',
         width: '100%',
+    },
+    disable:{
+        backgroundColor: '#f7f7f7',
+    },
+    enabled:{
+        backgroundColor: '#fff',
     },
     dropdownHeaderFocused: {
         borderColor: '#96C8DA',
