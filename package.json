@@ -1,6 +1,6 @@
 {
   "name": "simple-multi-select",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A simple port from React Multi Select Component https://github.com/khan/react-multi-select",
   "repository": {
     "type": "git",
