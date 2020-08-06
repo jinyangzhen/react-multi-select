@@ -65,7 +65,7 @@ var SelectList = function (_Component) {
                 _this.computeActiveLevel(currentSelected, options);
                 currentSelected = _lodash2.default.filter(currentSelected, function (s) {
                     var o = _lodash2.default.find(_this.props.options, { value: s });
-                    return o.level <= _this.activeLevel;
+                    return o && o.level <= _this.activeLevel;
                 });
             }
 

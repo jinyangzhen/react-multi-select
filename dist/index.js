@@ -118,13 +118,16 @@ var SimpleMultiSelect = function (_Component) {
                 isLoading = _props3.isLoading,
                 enableSearch = _props3.enableSearch,
                 leafOnly = _props3.leafOnly,
-                isLeafChecker = _props3.isLeafChecker;
+                isLeafChecker = _props3.isLeafChecker,
+                disabled = _props3.disabled,
+                searchFunc = _props3.searchFunc;
 
 
             return _react2.default.createElement(
                 _dropdown2.default,
                 {
                     isLoading: isLoading,
+                    disabled: disabled,
                     contentComponent: _selectPanel2.default,
                     contentProps: {
                         ItemRenderer: ItemRenderer,
@@ -134,7 +137,8 @@ var SimpleMultiSelect = function (_Component) {
                         onSelectedChanged: onSelectedChanged,
                         enableSearch: enableSearch,
                         leafOnly: leafOnly,
-                        isLeafChecker: isLeafChecker
+                        isLeafChecker: isLeafChecker,
+                        searchFunc: searchFunc
                     }
                 },
                 this.renderHeader()

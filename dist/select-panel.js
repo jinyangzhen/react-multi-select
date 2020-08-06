@@ -80,7 +80,7 @@ var SelectPanel = function (_Component) {
 
             var isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
             var allValues = _lodash2.default.chain(options).map(function (o) {
-                return isLeaf(o) ? o.value : null;
+                return isLeaf(o, options) ? o.value : null;
             }).without(null, undefined).value();
 
             onSelectedChanged(allValues);
@@ -154,10 +154,19 @@ var SelectPanel = function (_Component) {
         key: 'filteredOptions',
         value: function filteredOptions() {
             var searchText = this.state.searchText;
-            var options = this.props.options;
+            var _props2 = this.props,
+                options = _props2.options,
+                searchFunc = _props2.searchFunc;
 
+            var op = _lodash2.default.map(options, function (o) {
+                if (!o.label) {
+                    return _lodash2.default.assign(o, { label: o.text });
+                } else {
+                    return o;
+                }
+            });
 
-            return (0, _fuzzyMatchUtils.filterOptions)(options, searchText);
+            return searchFunc ? searchFunc(op, searchText) : (0, _fuzzyMatchUtils.filterOptions)(op, searchText);
         }
     }, {
         key: 'updateFocus',
@@ -180,11 +189,11 @@ var SelectPanel = function (_Component) {
             var _state = this.state,
                 focusIndex = _state.focusIndex,
                 searchHasFocus = _state.searchHasFocus;
-            var _props2 = this.props,
-                ItemRenderer = _props2.ItemRenderer,
-                selectAllLabel = _props2.selectAllLabel,
-                enableSearch = _props2.enableSearch,
-                leafOnly = _props2.leafOnly;
+            var _props3 = this.props,
+                ItemRenderer = _props3.ItemRenderer,
+                selectAllLabel = _props3.selectAllLabel,
+                enableSearch = _props3.enableSearch,
+                leafOnly = _props3.leafOnly;
 
 
             var selectAllOption = {

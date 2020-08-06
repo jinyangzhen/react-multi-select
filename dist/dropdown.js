@@ -58,21 +58,23 @@ var Dropdown = function (_Component) {
                 _this.setState({ expanded: false });
             }
         }, _this.handleKeyDown = function (e) {
-            switch (e.which) {
-                case 27:
-                    // Escape
-                    _this.toggleExpanded(false);
-                    break;
-                case 38:
-                    // Up Arrow
-                    _this.toggleExpanded(false);
-                    break;
-                case 40:
-                    // Down Arrow
-                    _this.toggleExpanded(true);
-                    break;
-                default:
-                    return;
+            if (!_this.props.disabled) {
+                switch (e.which) {
+                    case 27:
+                        // Escape
+                        _this.toggleExpanded(false);
+                        break;
+                    case 38:
+                        // Up Arrow
+                        _this.toggleExpanded(false);
+                        break;
+                    case 40:
+                        // Down Arrow
+                        _this.toggleExpanded(true);
+                        break;
+                    default:
+                        return;
+                }
             }
 
             e.preventDefault();
@@ -80,14 +82,14 @@ var Dropdown = function (_Component) {
             var hasFocus = _this.state.hasFocus;
 
 
-            if (e.target === _this.wrapper && !hasFocus) {
+            if (!_this.props.disabled && e.target === _this.wrapper && !hasFocus) {
                 _this.setState({ hasFocus: true });
             }
         }, _this.handleBlur = function (e) {
             var hasFocus = _this.state.hasFocus;
 
 
-            if (hasFocus) {
+            if (!_this.props.disabled && hasFocus) {
                 _this.setState({ hasFocus: false });
             }
         }, _this.toggleExpanded = function (value) {
@@ -165,7 +167,7 @@ var Dropdown = function (_Component) {
                 children = _props2.children,
                 isLoading = _props2.isLoading,
                 contentProps = _props2.contentProps,
-                leafOnly = _props2.leafOnly;
+                disabled = _props2.disabled;
 
 
             var expandedHeaderStyle = expanded ? styles.dropdownHeaderExpanded : undefined;
@@ -182,11 +184,9 @@ var Dropdown = function (_Component) {
             //     ? styles.dropdownArrowDownFocused
             //     : undefined;
 
-            console.log('hover ' + hovered);
-
             return _react2.default.createElement(
                 'div',
-                {
+                { id: 'simple-multiple-select',
                     tabIndex: '0',
                     role: 'combobox',
                     'aria-expanded': expanded,
@@ -199,12 +199,17 @@ var Dropdown = function (_Component) {
                     onFocus: this.handleFocus,
                     onBlur: this.handleBlur,
                     onMouseEnter: function onMouseEnter() {
-                        return _this2.setState({ hovered: true });
+                        if (disabled) {
+                            return;
+                        }
+                        _this2.setState({ hovered: true });
                     },
                     onMouseLeave: function onMouseLeave() {
-                        return _this2.setState({ hovered: false });
-                    }
-                },
+                        if (disabled) {
+                            return;
+                        }
+                        _this2.setState({ hovered: false });
+                    } },
                 _react2.default.createElement(
                     _styleIt2.default,
                     null,
@@ -216,7 +221,10 @@ var Dropdown = function (_Component) {
                     _react2.default.createElement(
                         'span',
                         { style: styles.dropdownChildren, onClick: function onClick() {
-                                return _this2.toggleExpanded();
+                                if (disabled) {
+                                    return;
+                                }
+                                _this2.toggleExpanded();
                             } },
                         children
                     ),
@@ -226,6 +234,9 @@ var Dropdown = function (_Component) {
                         isLoading && _react2.default.createElement(_loadingIndicator2.default, null)
                     ),
                     (expanded || hovered) && clearable ? _react2.default.createElement('span', { className: 'xButton', onClick: function onClick(e) {
+                            if (disabled) {
+                                return;
+                            }
                             if (self.refs.selectPanel) {
                                 self.refs.selectPanel.selectNone();
                             } else {
@@ -237,8 +248,11 @@ var Dropdown = function (_Component) {
                         } }) : '',
                     _react2.default.createElement(
                         'span',
-                        { style: styles.dropdownArrow, onClick: function onClick() {
-                                return _this2.toggleExpanded();
+                        { id: 'dropdown-arrow', style: styles.dropdownArrow, onClick: function onClick() {
+                                if (disabled) {
+                                    return;
+                                }
+                                _this2.toggleExpanded();
                             } },
                         _react2.default.createElement('span', { style: _extends({}, styles.dropdownArrowDown)
                         })

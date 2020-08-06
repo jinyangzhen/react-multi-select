@@ -402,21 +402,23 @@ var Dropdown = function (_Component) {
                 _this.setState({ expanded: false });
             }
         }, _this.handleKeyDown = function (e) {
-            switch (e.which) {
-                case 27:
-                    // Escape
-                    _this.toggleExpanded(false);
-                    break;
-                case 38:
-                    // Up Arrow
-                    _this.toggleExpanded(false);
-                    break;
-                case 40:
-                    // Down Arrow
-                    _this.toggleExpanded(true);
-                    break;
-                default:
-                    return;
+            if (!_this.props.disabled) {
+                switch (e.which) {
+                    case 27:
+                        // Escape
+                        _this.toggleExpanded(false);
+                        break;
+                    case 38:
+                        // Up Arrow
+                        _this.toggleExpanded(false);
+                        break;
+                    case 40:
+                        // Down Arrow
+                        _this.toggleExpanded(true);
+                        break;
+                    default:
+                        return;
+                }
             }
 
             e.preventDefault();
@@ -424,14 +426,14 @@ var Dropdown = function (_Component) {
             var hasFocus = _this.state.hasFocus;
 
 
-            if (e.target === _this.wrapper && !hasFocus) {
+            if (!_this.props.disabled && e.target === _this.wrapper && !hasFocus) {
                 _this.setState({ hasFocus: true });
             }
         }, _this.handleBlur = function (e) {
             var hasFocus = _this.state.hasFocus;
 
 
-            if (hasFocus) {
+            if (!_this.props.disabled && hasFocus) {
                 _this.setState({ hasFocus: false });
             }
         }, _this.toggleExpanded = function (value) {
@@ -509,7 +511,7 @@ var Dropdown = function (_Component) {
                 children = _props2.children,
                 isLoading = _props2.isLoading,
                 contentProps = _props2.contentProps,
-                leafOnly = _props2.leafOnly;
+                disabled = _props2.disabled;
 
 
             var expandedHeaderStyle = expanded ? styles.dropdownHeaderExpanded : undefined;
@@ -526,11 +528,9 @@ var Dropdown = function (_Component) {
             //     ? styles.dropdownArrowDownFocused
             //     : undefined;
 
-            console.log('hover ' + hovered);
-
             return _react2.default.createElement(
                 'div',
-                {
+                { id: 'simple-multiple-select',
                     tabIndex: '0',
                     role: 'combobox',
                     'aria-expanded': expanded,
@@ -543,12 +543,17 @@ var Dropdown = function (_Component) {
                     onFocus: this.handleFocus,
                     onBlur: this.handleBlur,
                     onMouseEnter: function onMouseEnter() {
-                        return _this2.setState({ hovered: true });
+                        if (disabled) {
+                            return;
+                        }
+                        _this2.setState({ hovered: true });
                     },
                     onMouseLeave: function onMouseLeave() {
-                        return _this2.setState({ hovered: false });
-                    }
-                },
+                        if (disabled) {
+                            return;
+                        }
+                        _this2.setState({ hovered: false });
+                    } },
                 _react2.default.createElement(
                     _styleIt2.default,
                     null,
@@ -560,7 +565,10 @@ var Dropdown = function (_Component) {
                     _react2.default.createElement(
                         'span',
                         { style: styles.dropdownChildren, onClick: function onClick() {
-                                return _this2.toggleExpanded();
+                                if (disabled) {
+                                    return;
+                                }
+                                _this2.toggleExpanded();
                             } },
                         children
                     ),
@@ -570,6 +578,9 @@ var Dropdown = function (_Component) {
                         isLoading && _react2.default.createElement(_loadingIndicator2.default, null)
                     ),
                     (expanded || hovered) && clearable ? _react2.default.createElement('span', { className: 'xButton', onClick: function onClick(e) {
+                            if (disabled) {
+                                return;
+                            }
                             if (self.refs.selectPanel) {
                                 self.refs.selectPanel.selectNone();
                             } else {
@@ -581,8 +592,11 @@ var Dropdown = function (_Component) {
                         } }) : '',
                     _react2.default.createElement(
                         'span',
-                        { style: styles.dropdownArrow, onClick: function onClick() {
-                                return _this2.toggleExpanded();
+                        { id: 'dropdown-arrow', style: styles.dropdownArrow, onClick: function onClick() {
+                                if (disabled) {
+                                    return;
+                                }
+                                _this2.toggleExpanded();
                             } },
                         _react2.default.createElement('span', { style: _extends({}, styles.dropdownArrowDown)
                         })
@@ -801,7 +815,7 @@ var SelectPanel = function (_Component) {
 
             var isLeaf = isLeafChecker ? isLeafChecker : defaultIsLeaf;
             var allValues = _lodash2.default.chain(options).map(function (o) {
-                return isLeaf(o) ? o.value : null;
+                return isLeaf(o, options) ? o.value : null;
             }).without(null, undefined).value();
 
             onSelectedChanged(allValues);
@@ -875,10 +889,19 @@ var SelectPanel = function (_Component) {
         key: 'filteredOptions',
         value: function filteredOptions() {
             var searchText = this.state.searchText;
-            var options = this.props.options;
+            var _props2 = this.props,
+                options = _props2.options,
+                searchFunc = _props2.searchFunc;
 
+            var op = _lodash2.default.map(options, function (o) {
+                if (!o.label) {
+                    return _lodash2.default.assign(o, { label: o.text });
+                } else {
+                    return o;
+                }
+            });
 
-            return (0, _fuzzyMatchUtils.filterOptions)(options, searchText);
+            return searchFunc ? searchFunc(op, searchText) : (0, _fuzzyMatchUtils.filterOptions)(op, searchText);
         }
     }, {
         key: 'updateFocus',
@@ -901,11 +924,11 @@ var SelectPanel = function (_Component) {
             var _state = this.state,
                 focusIndex = _state.focusIndex,
                 searchHasFocus = _state.searchHasFocus;
-            var _props2 = this.props,
-                ItemRenderer = _props2.ItemRenderer,
-                selectAllLabel = _props2.selectAllLabel,
-                enableSearch = _props2.enableSearch,
-                leafOnly = _props2.leafOnly;
+            var _props3 = this.props,
+                ItemRenderer = _props3.ItemRenderer,
+                selectAllLabel = _props3.selectAllLabel,
+                enableSearch = _props3.enableSearch,
+                leafOnly = _props3.leafOnly;
 
 
             var selectAllOption = {
@@ -1120,13 +1143,16 @@ var SimpleMultiSelect = function (_Component) {
                 isLoading = _props3.isLoading,
                 enableSearch = _props3.enableSearch,
                 leafOnly = _props3.leafOnly,
-                isLeafChecker = _props3.isLeafChecker;
+                isLeafChecker = _props3.isLeafChecker,
+                disabled = _props3.disabled,
+                searchFunc = _props3.searchFunc;
 
 
             return _react2.default.createElement(
                 _dropdown2.default,
                 {
                     isLoading: isLoading,
+                    disabled: disabled,
                     contentComponent: _selectPanel2.default,
                     contentProps: {
                         ItemRenderer: ItemRenderer,
@@ -1136,7 +1162,8 @@ var SimpleMultiSelect = function (_Component) {
                         onSelectedChanged: onSelectedChanged,
                         enableSearch: enableSearch,
                         leafOnly: leafOnly,
-                        isLeafChecker: isLeafChecker
+                        isLeafChecker: isLeafChecker,
+                        searchFunc: searchFunc
                     }
                 },
                 this.renderHeader()
@@ -1337,7 +1364,7 @@ var SelectList = function (_Component) {
                 _this.computeActiveLevel(currentSelected, options);
                 currentSelected = _lodash2.default.filter(currentSelected, function (s) {
                     var o = _lodash2.default.find(_this.props.options, { value: s });
-                    return o.level <= _this.activeLevel;
+                    return o && o.level <= _this.activeLevel;
                 });
             }
 

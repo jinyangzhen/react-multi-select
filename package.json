@@ -4,10 +4,10 @@
   "description": "A simple port from React Multi Select Component https://github.com/khan/react-multi-select",
   "repository": {
     "type": "git",
-    "url": "git@github.corp.ebay.com:yangjin/react-multi-select.git"
+    "url": "https://github.com/jinyangzhen/react-multi-select"
   },
   "publishConfig": {
-    "registry": "https://npm.corp.ebay.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "license": "MIT",
   "scripts": {
