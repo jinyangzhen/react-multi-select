@@ -260,7 +260,7 @@ var styles = {
         display: "block",
 
         maxWidth: "100%",
-        borderRadius: "3px",
+        borderRadius: "0px",
 
         boxSizing: 'border-box',
         height: '30px',

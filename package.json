@@ -7,7 +7,7 @@
     "url": "https://github.com/jinyangzhen/react-multi-select"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://artifactory.corp.ebay.com/artifactory/api/npm/npm-dss/"
   },
   "license": "MIT",
   "scripts": {

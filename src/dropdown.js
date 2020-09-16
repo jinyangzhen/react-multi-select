@@ -120,7 +120,7 @@ class Dropdown extends Component {
         const { options } = contentProps
         const dropdownHeight = Math.min((options.length + 1) * 34 + 44, 500)
         if (dropdownHeight > spaceToViewportBottom) {
-            _.assign(panelStyles, { top: 'unset', bottom: '100%', borderBottomStyle: 'none' })
+            _.assign(panelStyles, { top: 'unset', bottom: '100%', borderBottomStyle: 'none', borderTopColor: '#96C8DA' })
         }
 
         return <div style={panelStyles}>

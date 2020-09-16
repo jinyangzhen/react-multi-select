@@ -327,8 +327,8 @@ var styles = {
     label: {
         display: 'inline-block',
         verticalAlign: 'middle',
-        borderBottomRightRadius: '2px',
-        borderTopRightRadius: '2px',
+        borderBottomRightRadius: '0px',
+        borderTopRightRadius: '0px',
         padding: '2px 5px',
         whiteSpace: 'pre',
         wordWrap: 'normal'
@@ -490,9 +490,22 @@ var Dropdown = function (_Component) {
                 relay(values);
             };
 
+            var panelStyles = _.clone(styles.panelContainer);
+
+            var _wrapper$getBoundingC = this.wrapper.getBoundingClientRect(),
+                bottom = _wrapper$getBoundingC.bottom;
+
+            var spaceToViewportBottom = window.innerHeight - bottom;
+            var options = contentProps.options;
+
+            var dropdownHeight = Math.min((options.length + 1) * 34 + 44, 500);
+            if (dropdownHeight > spaceToViewportBottom) {
+                _.assign(panelStyles, { top: 'unset', bottom: '100%', borderBottomStyle: 'none', borderTopColor: '#96C8DA' });
+            }
+
             return _react2.default.createElement(
                 'div',
-                { style: styles.panelContainer },
+                { style: panelStyles },
                 _react2.default.createElement(ContentComponent, _extends({ ref: 'selectPanel' }, contentProps))
             );
         }
@@ -561,7 +574,7 @@ var Dropdown = function (_Component) {
                 ),
                 _react2.default.createElement(
                     'div',
-                    { style: _extends({}, styles.dropdownHeader, expandedHeaderStyle, hoverHeaderStyle, focusedHeaderStyle) },
+                    { style: _extends({}, styles.dropdownHeader, disabled ? styles.disable : styles.enable, expandedHeaderStyle, hoverHeaderStyle, focusedHeaderStyle) },
                     _react2.default.createElement(
                         'span',
                         { style: styles.dropdownChildren, onClick: function onClick() {
@@ -675,9 +688,9 @@ var styles = {
         boxSizing: 'border-box',
         backgroundColor: '#fff',
         borderColor: 'rgba(34, 36, 38, 0.15)',
-        borderRadius: 4,
-        borderBottomRightRadius: 4,
-        borderBottomLeftRadius: 4,
+        borderRadius: 0,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
         border: '1px solid rgba(34, 36, 38, 0.15)',
         color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
@@ -689,6 +702,12 @@ var styles = {
         overflow: 'hidden',
         position: 'relative',
         width: '100%'
+    },
+    disable: {
+        backgroundColor: '#f7f7f7'
+    },
+    enabled: {
+        backgroundColor: '#fff'
     },
     dropdownHeaderFocused: {
         borderColor: '#96C8DA',
@@ -709,8 +728,8 @@ var styles = {
         width: '16px'
     },
     panelContainer: {
-        borderBottomRightRadius: '4px',
-        borderBottomLeftRadius: '4px',
+        borderBottomRightRadius: '0px',
+        borderBottomLeftRadius: '0px',
         backgroundColor: '#fff',
         border: '1px solid #96C8DA',
         borderTopColor: '#e6e6e6',
@@ -995,7 +1014,7 @@ var styles = {
         display: "block",
 
         maxWidth: "100%",
-        borderRadius: "3px",
+        borderRadius: "0px",
 
         boxSizing: 'border-box',
         height: '30px',
