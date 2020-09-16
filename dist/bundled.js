@@ -493,13 +493,15 @@ var Dropdown = function (_Component) {
             var panelStyles = _.clone(styles.panelContainer);
 
             var _wrapper$getBoundingC = this.wrapper.getBoundingClientRect(),
-                bottom = _wrapper$getBoundingC.bottom;
+                bottom = _wrapper$getBoundingC.bottom,
+                top = _wrapper$getBoundingC.top;
 
             var spaceToViewportBottom = window.innerHeight - bottom;
             var options = contentProps.options;
 
             var dropdownHeight = Math.min((options.length + 1) * 34 + 44, 500);
-            if (dropdownHeight > spaceToViewportBottom) {
+            if (dropdownHeight > spaceToViewportBottom && top > dropdownHeight) {
+                // top area is engouh to display the dropdown panel, convert style to raise-up
                 _.assign(panelStyles, { top: 'unset', bottom: '100%', borderBottomStyle: 'none', borderTopColor: '#96C8DA' });
             }
 

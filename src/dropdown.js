@@ -115,11 +115,12 @@ class Dropdown extends Component {
         }
 
         const panelStyles = _.clone(styles.panelContainer)
-        const { bottom } = this.wrapper.getBoundingClientRect()
+        const { bottom, top } = this.wrapper.getBoundingClientRect()
         const spaceToViewportBottom = window.innerHeight - bottom
         const { options } = contentProps
         const dropdownHeight = Math.min((options.length + 1) * 34 + 44, 500)
-        if (dropdownHeight > spaceToViewportBottom) {
+        if (dropdownHeight > spaceToViewportBottom && top > dropdownHeight) {
+            // top area is engouh to display the dropdown panel, convert style to raise-up
             _.assign(panelStyles, { top: 'unset', bottom: '100%', borderBottomStyle: 'none', borderTopColor: '#96C8DA' })
         }
 
