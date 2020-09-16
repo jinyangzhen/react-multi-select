@@ -114,7 +114,16 @@ class Dropdown extends Component {
             relay(values);
         }
 
-        return <div style={styles.panelContainer}>
+        const panelStyles = _.clone(styles.panelContainer)
+        const { bottom } = this.wrapper.getBoundingClientRect()
+        const spaceToViewportBottom = window.innerHeight - bottom
+        const { options } = contentProps
+        const dropdownHeight = Math.min((options.length + 1) * 34 + 44, 500)
+        if (dropdownHeight > spaceToViewportBottom) {
+            _.assign(panelStyles, { top: 'unset', bottom: '100%', borderBottomStyle: 'none' })
+        }
+
+        return <div style={panelStyles}>
             <ContentComponent ref='selectPanel' {...contentProps} />
         </div>;
     }
@@ -326,9 +335,9 @@ const styles = {
         boxSizing: 'border-box',
         backgroundColor: '#fff',
         borderColor: 'rgba(34, 36, 38, 0.15)',
-        borderRadius: 4,
-        borderBottomRightRadius: 4,
-        borderBottomLeftRadius: 4,
+        borderRadius: 0,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
         border: '1px solid rgba(34, 36, 38, 0.15)',
         color: 'rgba(0, 0, 0, 0.87)',
         cursor: 'default',
@@ -341,10 +350,10 @@ const styles = {
         position: 'relative',
         width: '100%',
     },
-    disable:{
+    disable: {
         backgroundColor: '#f7f7f7',
     },
-    enabled:{
+    enabled: {
         backgroundColor: '#fff',
     },
     dropdownHeaderFocused: {
@@ -366,8 +375,8 @@ const styles = {
         width: '16px',
     },
     panelContainer: {
-        borderBottomRightRadius: '4px',
-        borderBottomLeftRadius: '4px',
+        borderBottomRightRadius: '0px',
+        borderBottomLeftRadius: '0px',
         backgroundColor: '#fff',
         border: '1px solid #96C8DA',
         borderTopColor: '#e6e6e6',

@@ -186,8 +186,8 @@ const styles = {
     label: {
         display: 'inline-block',
         verticalAlign: 'middle',
-        borderBottomRightRadius: '2px',
-        borderTopRightRadius: '2px',
+        borderBottomRightRadius: '0px',
+        borderTopRightRadius: '0px',
         padding: '2px 5px',
         whiteSpace: 'pre',
         wordWrap: 'normal'
