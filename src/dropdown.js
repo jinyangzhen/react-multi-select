@@ -4,6 +4,7 @@
  * and hosts it in the component.  When the component is selected, it
  * drops-down the contentComponent and applies the contentProps.
  */
+import * as _ from 'lodash';
 import React, { Component } from 'react';
 import Style from 'style-it';
 import LoadingIndicator from './loading-indicator.js';
