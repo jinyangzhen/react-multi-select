@@ -12,7 +12,7 @@
  * - valueRenderer: A fn to support overriding the message in the component
  * - isLoading: Show a loading indicator
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Dropdown from './dropdown.js';
 import SelectPanel from './select-panel.js';
@@ -33,15 +33,15 @@ class SimpleMultiSelect extends Component {
         ItemRenderer?: Function,
         selectAllLabel: string,
         isLoading?: boolean,
-        enableSearch?:boolean,
-        leafOnly?:boolean,
-        isLeafChecker?:Function,
+        enableSearch?: boolean,
+        leafOnly?: boolean,
+        isLeafChecker?: Function,
         disabled: boolean,
-        searchFunc?:Function
+        searchFunc?: Function
     }
 
     getSelectedText() {
-        const {options, selected} = this.props;
+        const { options, selected } = this.props;
 
         const selectedOptions = selected
             .map(s => options.find(o => o.value === s));
@@ -70,7 +70,7 @@ class SimpleMultiSelect extends Component {
         }
 
         if (customText) {
-            return <span>{customText}</span>;
+            return <span style={{ whiteSpace: "nowrap" }}>{customText}</span>;
         }
 
         return <span>
@@ -98,7 +98,7 @@ class SimpleMultiSelect extends Component {
 
         return <Dropdown
             isLoading={isLoading}
-            disabled ={disabled}
+            disabled={disabled}
             contentComponent={SelectPanel}
             contentProps={{
                 ItemRenderer,
@@ -124,4 +124,4 @@ const styles = {
 };
 
 export default SimpleMultiSelect;
-export {Dropdown};
+export { Dropdown };
