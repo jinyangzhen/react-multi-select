@@ -1147,7 +1147,7 @@ var SimpleMultiSelect = function (_Component) {
             if (customText) {
                 return _react2.default.createElement(
                     'span',
-                    null,
+                    { style: { whiteSpace: "nowrap" } },
                     customText
                 );
             }
