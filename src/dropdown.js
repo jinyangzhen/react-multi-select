@@ -389,7 +389,7 @@ const styles = {
         position: 'absolute',
         top: '100%',
         width: '100%',
-        zIndex: 99,
+        zIndex: 999,
         overflowY: 'auto',
     },
 };
